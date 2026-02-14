@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -29,22 +30,36 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto userDto, String userId) {
-        return null;
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with given id!"));
+
+        user.setName(userDto.getName());
+        user.setAbout(userDto.getAbout());
+        user.setGender(userDto.getGender());
+        user.setPassword(userDto.getPassword());
+        user.setImageName(userDto.getImageName());
+
+        User updatedUser = userRepository.save(user);
+        UserDto updatedDto = entityToDto(updatedUser);
+        return updatedDto;
     }
 
     @Override
     public void deleteUser(String userId) {
-
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with given id!"));
+        userRepository.delete(user);
     }
 
     @Override
     public List<UserDto> getAllUser() {
-        return List.of();
+        List<User> users = userRepository.findAll();
+        List<UserDto> dtoList = users.stream().map(user -> entityToDto(user)).collect(Collectors.toList());
+        return dtoList;
     }
 
     @Override
     public UserDto getUserById(String userId) {
-        return null;
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with given id!"));
+        return entityToDto(user);
     }
 
     @Override
