@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.dtos;
 
+import com.lcwd.electronic.store.validate.ImageNameValid;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -26,5 +27,6 @@ public class UserDto {
     private String gender;
     @NotBlank(message = "Write something about yourself!")
     private String about;
+    @ImageNameValid
     private String imageName;
 }
