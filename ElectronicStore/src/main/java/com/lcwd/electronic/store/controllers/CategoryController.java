@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
@@ -16,7 +18,8 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<CategoryDto> createCategory(@RequestBody CategoryDto categoryDto){
+    public ResponseEntity<CategoryDto> createCategory(@Valid
+                                                      @RequestBody CategoryDto categoryDto){
         CategoryDto categoryDto1 = categoryService.create(categoryDto);
         return new ResponseEntity<>(categoryDto1, HttpStatus.CREATED);
     }
@@ -25,7 +28,7 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> updateCategory(@PathVariable String categoryId,
                                                       @RequestBody CategoryDto categoryDto){
         CategoryDto updateCategory = categoryService.update(categoryDto, categoryId);
-        return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+        return new ResponseEntity<>(updateCategory, HttpStatus.OK);
     }
 
     @DeleteMapping("/{categoryId}")
@@ -41,7 +44,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<PageableResponse<CategoryDto>> getAll(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
-                                                                @RequestParam(value = "pageSize", defaultValue = "0", required = false) int pageSize,
+                                                                @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
                                                                 @RequestParam(value = "sortBy", defaultValue = "title", required = false) String sortBy,
                                                                 @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir){
         PageableResponse<CategoryDto> pageableResponse = categoryService.getAll(pageNumber, pageSize, sortBy, sortDir);
