@@ -68,4 +68,21 @@ public class CategoryController {
         ProductDto productWithCategory = productService.createWithCategory(dto, categoryId);
         return new ResponseEntity<>(productWithCategory, HttpStatus.CREATED);
     }
+
+    @PutMapping("/{categoryId}/products/{productId}")
+    public ResponseEntity<ProductDto> updateCategoryOfProduct(@PathVariable String categoryId,
+                                                              @PathVariable String productId){
+        ProductDto productDto = productService.updateCategory(productId, categoryId);
+        return new ResponseEntity<>(productDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/{categoryId}/products")
+    public ResponseEntity<PageableResponse<ProductDto>> getProductOfCategory(@PathVariable String categoryId,
+                                                                             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
+                                                                             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
+                                                                             @RequestParam(value = "sortBy", defaultValue = "title", required = false) String sortBy,
+                                                                             @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir){
+        PageableResponse<ProductDto> response = productService.getAllOfCategory(categoryId, pageNumber, pageSize, sortBy, sortDir);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
