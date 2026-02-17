@@ -50,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
         product.setQuantity(productDto.getQuantity());
         product.setLive(productDto.isLive());
         product.setStock(productDto.isStock());
-
+        product.setProductImageName(productDto.getProductImageName());
         Product updatedProduct = productRepository.save(product);
 
         return mapper.map(updatedProduct, ProductDto.class);
