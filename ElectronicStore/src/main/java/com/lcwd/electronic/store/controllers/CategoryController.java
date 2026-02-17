@@ -3,7 +3,9 @@ package com.lcwd.electronic.store.controllers;
 import com.lcwd.electronic.store.dtos.ApiResponseMessage;
 import com.lcwd.electronic.store.dtos.CategoryDto;
 import com.lcwd.electronic.store.dtos.PageableResponse;
+import com.lcwd.electronic.store.dtos.ProductDto;
 import com.lcwd.electronic.store.services.CategoryService;
+import com.lcwd.electronic.store.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,9 @@ import javax.validation.Valid;
 public class CategoryController {
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private ProductService productService;
 
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory(@Valid
@@ -55,5 +60,12 @@ public class CategoryController {
     public ResponseEntity<CategoryDto> getSingle(@PathVariable String categoryId){
         CategoryDto categoryDto = categoryService.get(categoryId);
         return ResponseEntity.ok(categoryDto);
+    }
+
+    @PostMapping("/{categoryId}/products")
+    public ResponseEntity<ProductDto> createProductWithCategory(@PathVariable("categoryId") String categoryId,
+                                                                @RequestBody ProductDto dto){
+        ProductDto productWithCategory = productService.createWithCategory(dto, categoryId);
+        return new ResponseEntity<>(productWithCategory, HttpStatus.CREATED);
     }
 }
