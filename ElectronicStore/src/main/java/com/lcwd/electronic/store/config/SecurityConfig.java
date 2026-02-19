@@ -49,6 +49,16 @@ public class SecurityConfig {
 //                .and()
 //                .logout()
 //                .logoutUrl("/logout");
+
+        http.csrf()
+                .disable()
+                .cors()
+                .disable()
+                .authorizeRequests()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .httpBasic();
         return http.build();
     }
 
