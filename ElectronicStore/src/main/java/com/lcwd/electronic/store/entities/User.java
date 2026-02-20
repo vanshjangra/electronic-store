@@ -37,6 +37,7 @@ public class User implements UserDetails {
     private Set<Role> roles = new HashSet<>();
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Cart cart;
+//    private String provider;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
