@@ -33,7 +33,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = {"Authorization"}, methods = {RequestMethod.GET, RequestMethod.POST}, maxAge = 3600)
 public class AuthController {
     @Value("${googleClientId}")
     private String googleClientId;
