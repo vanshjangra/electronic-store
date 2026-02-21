@@ -19,6 +19,7 @@ import java.io.InputStream;
 
 @RestController
 @RequestMapping("/products")
+//@CrossOrigin("*")
 public class ProductController {
     @Value("${product.image.path}")
     private String imagePath;

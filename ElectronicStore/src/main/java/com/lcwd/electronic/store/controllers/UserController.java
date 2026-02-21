@@ -25,6 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+//@CrossOrigin("*")
 public class UserController {
     @Value("${user.profile.image.path}")
     private String imageUploadPath;

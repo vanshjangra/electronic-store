@@ -73,8 +73,6 @@ public class SecurityConfig {
 
         http.csrf()
                 .disable()
-                .cors()
-                .disable()
                 .authorizeRequests()
                 .antMatchers("/auth/login")
                 .permitAll()
@@ -136,7 +134,7 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
 
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new CorsFilter(source));
-//        filterRegistrationBean.setOrder(-5);
+        filterRegistrationBean.setOrder(-110);
         return filterRegistrationBean;
     }
 }
