@@ -39,6 +39,13 @@ public class SecurityConfig {
     @Autowired
     private JwtAuthenticationFilter authenticationFilter;
 
+    private final String[] PUBLIC_URLS = {
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-resources/**",
+            "/v3/api-docs"
+    };
+
 //    @Bean
 //    public UserDetailsService userDetailsService(){
 //        UserDetails normal = User.builder()
@@ -81,6 +88,8 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/users")
                 .permitAll()
                 .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+                .antMatchers(PUBLIC_URLS)
+                .permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
