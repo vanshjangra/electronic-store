@@ -6,6 +6,10 @@ import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.UserDto;
 import com.lcwd.electronic.store.services.FileService;
 import com.lcwd.electronic.store.services.UserService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +29,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-//@CrossOrigin("*")
+@Api(value = "UserController", description = "REST APIs related to perform user operations!")
 public class UserController {
     @Value("${user.profile.image.path}")
     private String imageUploadPath;
@@ -39,6 +43,12 @@ public class UserController {
     private FileService fileService;
 
     @PostMapping
+    @ApiOperation(value = "Create new user!")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success | OK"),
+            @ApiResponse(code = 401, message = "Not authorized!"),
+            @ApiResponse(code = 201, message = "New user created!")
+    })
     public ResponseEntity<UserDto> createUser(@Valid
                                               @RequestBody UserDto userDto){
         UserDto userDto1 = userService.createUser(userDto);
@@ -65,6 +75,7 @@ public class UserController {
     }
 
     @GetMapping
+    @ApiOperation(value = "Get all users", tags = {"user-controller"})
     public ResponseEntity<PageableResponse<UserDto>> getAllUsers(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
                                                                  @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
                                                                  @RequestParam(value = "sortBy", defaultValue = "name", required = false) String sortBy,
@@ -73,6 +84,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
+    @ApiOperation(value = "Get single user by userid!")
     public ResponseEntity<UserDto> getUser(@PathVariable String userId){
         return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
     }
