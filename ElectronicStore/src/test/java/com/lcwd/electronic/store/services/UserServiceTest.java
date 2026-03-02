@@ -156,4 +156,54 @@ public class UserServiceTest {
         Assertions.assertNotNull(userDto);
         Assertions.assertEquals(user.getEmail(), userDto.getEmail(), "Email not matched!");
     }
+
+    @Test
+    public void searchUserTest(){
+        User user1 = User.builder()
+                .name("Sachin Jangra")
+                .email("sachinjangra@gmail.com")
+                .about("This is testing create method")
+                .gender("Male")
+                .imageName("sachin.png")
+                .password("sachinjangra")
+                .roles(Set.of(role))
+                .build();
+
+        User user2 = User.builder()
+                .name("Ashu Jangra")
+                .email("ashujangra@gmail.com")
+                .about("This is testing create method")
+                .gender("Male")
+                .imageName("ashu.png")
+                .password("ashujangra")
+                .roles(Set.of(role))
+                .build();
+
+        User user3 = User.builder()
+                .name("Sudhanshu Jangra")
+                .email("sudhanshujangra@gmail.com")
+                .about("This is testing create method")
+                .gender("Male")
+                .imageName("sudhanshu.png")
+                .password("sudhanshujangra")
+                .roles(Set.of(role))
+                .build();
+
+        String keywords = "Jangra";
+        Mockito.when(userRepository.findByNameContaining(keywords)).thenReturn(Arrays.asList(user, user1, user2, user3));
+
+        List<UserDto> userDtos = userService.searchUser(keywords);
+        Assertions.assertEquals(4, userDtos.size(), "Size not matched!");
+    }
+
+    @Test
+    public void findUserByEmailOptionalTest(){
+        String email = "vanshjangra@gmail.com";
+        Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+
+        Optional<User> userByEmailOptional = userService.findUserByEmailOptional(email);
+        Assertions.assertTrue(userByEmailOptional.isPresent());
+        User user1 = userByEmailOptional.get();
+        Assertions.assertEquals(user.getEmail(), user1.getEmail(), "Email does not matched!");
+    }
 }
