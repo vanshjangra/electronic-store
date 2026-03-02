@@ -1,6 +1,7 @@
 package com.lcwd.electronic.store.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.UserDto;
 import com.lcwd.electronic.store.entities.Role;
 import com.lcwd.electronic.store.entities.User;
@@ -18,6 +19,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -85,6 +87,52 @@ public class UserControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").exists());
+    }
+
+    @Test
+    public void getAllUsersTest() throws Exception {
+        UserDto object1 = UserDto.builder()
+                .name("Vansh Jangra")
+                .email("vanshjangra@gmail.com")
+                .password("vanshjangra")
+                .about("Testing")
+                .build();
+
+        UserDto object2 = UserDto.builder()
+                .name("Sachin Jangra")
+                .email("sachinjangra@gmail.com")
+                .password("sachinjangra")
+                .about("Testing")
+                .build();
+
+        UserDto object3 = UserDto.builder()
+                .name("Ashu Jangra")
+                .email("ashujangra@gmail.com")
+                .password("ashujangra")
+                .about("Testing")
+                .build();
+
+        UserDto object4 = UserDto.builder()
+                .name("Sudhanshu Jangra")
+                .email("sudhanshujangra@gmail.com")
+                .password("sudhanshujangra")
+                .about("Testing")
+                .build();
+
+        PageableResponse<UserDto> pageableResponse = new PageableResponse<>();
+        pageableResponse.setContent(Arrays.asList(object1, object2, object3, object4));
+        pageableResponse.setLastPage(false);
+        pageableResponse.setPageSize(10);
+        pageableResponse.setTotalPages(100);
+        pageableResponse.setTotalElements(1000);
+
+        Mockito.when(userService.getAllUser(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString())).thenReturn(pageableResponse);
+
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     private String convertObjectToJsonString(Object user) {
