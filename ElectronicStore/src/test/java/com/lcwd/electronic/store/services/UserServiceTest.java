@@ -66,4 +66,27 @@ public class UserServiceTest {
         Assertions.assertNotNull(user1);
         Assertions.assertEquals("Vansh Jangra", user1.getName());
     }
+
+    @Test
+    public void updateUserTest(){
+        String userId = "hosdhfosdhvo";
+
+        UserDto userDto = UserDto.builder()
+                .name("Vansh Jangra")
+                .about("This is updated user about details")
+                .gender("Male")
+                .imageName("vansh.png")
+                .build();
+
+        Mockito.when(userRepository.findById(Mockito.anyString())).thenReturn(Optional.of(user));
+        Mockito.when(userRepository.save(Mockito.any())).thenReturn(user);
+
+        UserDto updatedUser = userService.updateUser(userDto, userId);
+//        UserDto updatedUser = mapper.map(user, UserDto.class);
+        System.out.println(updatedUser.getName());
+        System.out.println(updatedUser.getImageName());
+
+        Assertions.assertNotNull(userDto);
+        Assertions.assertEquals(userDto.getName(), updatedUser.getName(), "Name is not validated!");
+    }
 }
