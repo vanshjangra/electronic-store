@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.services;
 
+import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.UserDto;
 import com.lcwd.electronic.store.entities.Role;
 import com.lcwd.electronic.store.entities.User;
@@ -13,7 +14,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -88,5 +92,46 @@ public class UserServiceTest {
 
         Assertions.assertNotNull(userDto);
         Assertions.assertEquals(userDto.getName(), updatedUser.getName(), "Name is not validated!");
+    }
+
+    @Test
+    public void deleteUserTest(){
+        String userId = "userIdabc";
+
+        Mockito.when(userRepository.findById("userIdabc")).thenReturn(Optional.of(user));
+        userService.deleteUser(userId);
+        Mockito.verify(userRepository, Mockito.times(1)).delete(user);
+    }
+
+    @Test
+    public void getAllUsersTest(){
+        User user1 = User.builder()
+                .name("Sachin Jangra")
+                .email("sachinjangra@gmail.com")
+                .about("This is testing create method")
+                .gender("Male")
+                .imageName("sachin.png")
+                .password("sachinjangra")
+                .roles(Set.of(role))
+                .build();
+
+        User user2 = User.builder()
+                .name("Ashu Jangra")
+                .email("ashujangra@gmail.com")
+                .about("This is testing create method")
+                .gender("Male")
+                .imageName("ashu.png")
+                .password("ashujangra")
+                .roles(Set.of(role))
+                .build();
+
+        List<User> userList = Arrays.asList(user, user1, user2);
+
+        Page<User> page = new PageImpl<>(userList);
+        Mockito.when(userRepository.findAll((Pageable) Mockito.any())).thenReturn(page);
+
+        PageableResponse<UserDto> allUser = userService.getAllUser(1, 2, "name", "asc");
+
+        Assertions.assertEquals(3, allUser.getContent().size());
     }
 }
