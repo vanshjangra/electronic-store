@@ -9,6 +9,7 @@ import com.lcwd.electronic.store.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+@SecurityRequirement(name = "scheme1")
 @RestController
 @RequestMapping("/users")
 @Tag(name = "UserController", description = "REST APIs related to perform user operations!")

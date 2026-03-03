@@ -3,6 +3,7 @@ package com.lcwd.electronic.store.controllers;
 import com.lcwd.electronic.store.dtos.*;
 import com.lcwd.electronic.store.services.FileService;
 import com.lcwd.electronic.store.services.ProductService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 
+@SecurityRequirement(name = "scheme1")
 @RestController
 @RequestMapping("/products")
 //@CrossOrigin("*")

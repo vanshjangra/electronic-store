@@ -1,10 +1,13 @@
 package com.lcwd.electronic.store.config;
 
-import io.swagger.v3.oas.models.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.info.Contact;
+import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.info.License;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 //import springfox.documentation.builders.PathSelectors;
@@ -20,18 +23,25 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
+@SecurityScheme(name = "scheme1", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
+@OpenAPIDefinition(info = @Info(title = "Electronic Store Api",
+                                description = "This is backend of electronic store developed in premium course",
+                                version = "1.0V",
+                                contact = @Contact(name = "Durgesh Kumar Tiwari", email = "learncodewithdurgesh@gmail.com", url = "https://learncodewithdurgesh.com"),
+                                license = @License(name = "OPEN License", url = "https://learncodewithdurgesh.com")),
+                                externalDocs = @ExternalDocumentation(description = "This is external docs", url = "https://learncodewithdurgesh.com"))
 public class SwaggerConfig {
-    @Bean
-    public OpenAPI openAPI(){
-        return new OpenAPI()
-                .info(new Info()
-                        .title("Electronic Store Api")
-                        .description("This is electronic store project api developed by LCWD")
-                        .version("1.0")
-                        .contact(new Contact().name("Durgesh").email("durgesh@gmail.com").url("durgesh.com"))
-                        .license(new License().name("Apache")))
-                .externalDocs(new ExternalDocumentation().url("learncodewithdurgesh.com").description("This is external url"));
-    }
+//    @Bean
+//    public OpenAPI openAPI(){
+//        return new OpenAPI()
+//                .info(new Info()
+//                        .title("Electronic Store Api")
+//                        .description("This is electronic store project api developed by LCWD")
+//                        .version("1.0")
+//                        .contact(new Contact().name("Durgesh").email("durgesh@gmail.com").url("durgesh.com"))
+//                        .license(new License().name("Apache")))
+//                .externalDocs(new ExternalDocumentation().url("learncodewithdurgesh.com").description("This is external url"));
+//    }
 
 //    @Bean
 //    public Docket docket(){
