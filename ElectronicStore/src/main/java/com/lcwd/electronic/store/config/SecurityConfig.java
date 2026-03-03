@@ -10,8 +10,9 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +29,7 @@ import org.springframework.web.filter.CorsFilter;
 import java.util.Arrays;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
@@ -79,28 +80,23 @@ public class SecurityConfig {
 //                .logout()
 //                .logoutUrl("/logout");
 
-        http.csrf()
-                .disable()
-                .authorizeRequests()
-                .antMatchers("/auth/login")
-                .permitAll()
-                .antMatchers("/auth/google")
-                .permitAll()
-                .antMatchers(HttpMethod.POST, "/users")
-                .permitAll()
-                .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
-                .antMatchers(PUBLIC_URLS)
-                .permitAll()
-                .antMatchers(HttpMethod.GET)
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(request ->
+                                request.requestMatchers("/auth/login")
+                                .permitAll()
+                                .requestMatchers("/auth/google")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.POST, "/users")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+                                .requestMatchers(PUBLIC_URLS)
+                                .permitAll()
+                                .requestMatchers(HttpMethod.GET)
+                                .permitAll()
+                                .anyRequest()
+                                .authenticated())
+                .exceptionHandling(config -> config.authenticationEntryPoint(authenticationEntryPoint))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
