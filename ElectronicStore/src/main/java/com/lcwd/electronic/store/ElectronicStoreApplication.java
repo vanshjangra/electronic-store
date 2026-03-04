@@ -1,7 +1,9 @@
 package com.lcwd.electronic.store;
 
 import com.lcwd.electronic.store.entities.Role;
+import com.lcwd.electronic.store.entities.User;
 import com.lcwd.electronic.store.repositories.RoleRepository;
+import com.lcwd.electronic.store.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -10,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import java.util.Set;
 import java.util.UUID;
 
 @SpringBootApplication
@@ -25,6 +28,9 @@ public class ElectronicStoreApplication implements CommandLineRunner {
 
 	@Autowired
 	private RoleRepository roleRepository;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ElectronicStoreApplication.class, args);
@@ -45,8 +51,32 @@ public class ElectronicStoreApplication implements CommandLineRunner {
 					.roleName("ROLE_NORMAL")
 					.build();
 
+//			User adminUser = User.builder()
+//							.name("Vansh Jangra")
+//							.email("vanshjangra@gmail.com")
+//							.password(passwordEncoder.encode("vanshjangra"))
+//							.gender("Male")
+//							.imageName("vanshjangra.png")
+//							.roles(Set.of(role_admin, role_normal))
+//							.userId(UUID.randomUUID().toString())
+//							.about("I am admin user")
+//							.build();
+
+//			User normalUser = User.builder()
+//					.name("sachinjangra")
+//					.email("sachinjangra@gmail.com")
+//					.password(passwordEncoder.encode("sachinjangra"))
+//					.gender("Male")
+//					.imageName("sachinjangra.png")
+//					.roles(Set.of(role_normal))
+//					.userId(UUID.randomUUID().toString())
+//					.about("I am normal user")
+//					.build();
+
 			roleRepository.save(role_admin);
 			roleRepository.save(role_normal);
+//			userRepository.save(adminUser);
+//			userRepository.save(normalUser);
 		}
 		catch (Exception e){
 			e.printStackTrace();
