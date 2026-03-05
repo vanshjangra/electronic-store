@@ -1,33 +1,32 @@
-import logo from './logo.svg';
 import './App.css';
-import { Button, Modal } from 'react-bootstrap';
-import { useState } from 'react';
+import About from './components/About';
+import Services from './components/Services';
 
 function App() {
-const [show, setShow] = useState(false);
-const handleClose = () => setShow(false);
-const handleShow = () => setShow(true);
+  const tempFun = () => {
+    console.log("This is temp fun");
+  };
+
+  let styled = {
+      backgroundColor: "#e2e2e2",
+      borderRadius: "10px",
+      color: "black",
+      padding: "20px"
+  };
 
   return (
-    <div>
-      <Button variant='success' onClick={handleShow} size='sm'>
-        Hey Click Me
-      </Button>
+    <div className='container' style={styled}>
+        <h1>This is heading</h1>
+          
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur odit tempora odio repudiandae dolorum quaerat ex reprehenderit, et, laudantium exercitationem perspiciatis rerum illum, culpa aliquid error. Animi voluptatum modi iure.
+          {2 + 5}
+          <br/>
+          {new Date().toDateString()}
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant='secondary' onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant='primary' onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <About title="Dynamic About" phone="234523523" myFun={tempFun}/>
+          <Services/>
+        </p>
     </div>
   );
 }
