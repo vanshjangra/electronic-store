@@ -1,33 +1,29 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
-import About from './components/About';
-import Services from './components/Services';
+import Index from './pages';
+import About from './pages/about';
+import Services from './pages/services';
+import Cart from './pages/cart';
+import Dashboard from './pages/users/dashboard';
+import Profile from './pages/users/Profile';
+import AboutUser from './pages/users/AboutUser';
+import CustomNavbar from './components/Navbar';
 
 function App() {
-  const tempFun = () => {
-    console.log("This is temp fun");
-  };
-
-  let styled = {
-      backgroundColor: "#e2e2e2",
-      borderRadius: "10px",
-      color: "black",
-      padding: "20px"
-  };
-
   return (
-    <div className='container' style={styled}>
-        <h1>This is heading</h1>
-          
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequuntur odit tempora odio repudiandae dolorum quaerat ex reprehenderit, et, laudantium exercitationem perspiciatis rerum illum, culpa aliquid error. Animi voluptatum modi iure.
-          {2 + 5}
-          <br/>
-          {new Date().toDateString()}
-
-          <About title="Dynamic About" phone="234523523" myFun={tempFun}/>
-          <Services/>
-        </p>
-    </div>
+    <BrowserRouter>
+        <CustomNavbar/>
+    <Routes>
+      <Route path='/' element={<Index/>}/>
+      <Route path='/about' element={<About/>}/>
+      <Route path='/services' element={<Services/>}/>
+      <Route path='/cart' element={<Cart/>}/>
+      <Route path='/users' element={<Dashboard/>}>
+        <Route path='profile' element={<Profile/>}/>
+        <Route path='about' element={<AboutUser/>}/>
+      </Route>
+    </Routes>
+    </BrowserRouter>
   );
 }
 
