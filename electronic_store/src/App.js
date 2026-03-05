@@ -10,6 +10,8 @@ import AboutUser from './pages/users/AboutUser';
 import CustomNavbar from './components/Navbar';
 import Contact from './pages/contact';
 import { Flip, ToastContainer, Zoom } from 'react-toastify';
+import Login from './pages/login';
+import Register from './pages/register';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
       <Route path='/services' element={<Services/>}/>
       <Route path='/contact' element={<Contact/>}/>
       <Route path='/cart' element={<Cart/>}/>
+      <Route path='/login' element={<Login/>}/>
+      <Route path='/register' element={<Register/>}/>
       <Route path='/users' element={<Dashboard/>}>
         <Route path='profile' element={<Profile/>}/>
         <Route path='about' element={<AboutUser/>}/>
