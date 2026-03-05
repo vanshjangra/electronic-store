@@ -9,11 +9,13 @@ import Profile from './pages/users/Profile';
 import AboutUser from './pages/users/AboutUser';
 import CustomNavbar from './components/Navbar';
 import Contact from './pages/contact';
+import { Flip, ToastContainer, Zoom } from 'react-toastify';
 
 function App() {
   return (
     <BrowserRouter>
-        <CustomNavbar/>
+      <ToastContainer position='bottom-center' theme='dark' draggable/>
+      <CustomNavbar/>
     <Routes>
       <Route path='/' element={<Index/>}/>
       <Route path='/about' element={<About/>}/>
