@@ -1,4 +1,4 @@
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap"
+import { Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap"
 import Base from "../components/Base"
 import logo from "../assets/logo.png"
 import { data, NavLink } from "react-router-dom"
@@ -79,6 +79,14 @@ const Login = () => {
               </Container>
 
               <h3 className="text-center text-uppercase">Store Login</h3>
+
+              <Alert className="mt-3" onClose={() => setError({
+                isError: false,
+                errorData: null
+              })} dismissible variant="danger" show={error.isError}>
+                <Alert.Heading>Hey there,</Alert.Heading>
+                <p>{error.errorData?.response?.data?.message}</p>
+              </Alert>
 
               <Form noValidate onSubmit={submitForm}>
                 <Form.Group className="mb-3">
