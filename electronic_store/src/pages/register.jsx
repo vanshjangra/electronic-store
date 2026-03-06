@@ -2,6 +2,8 @@ import { Button, Card, Col, Container, Form, Row } from "react-bootstrap"
 import Base from "../components/Base"
 import logo from "../assets/logo.png"
 import { useState } from "react"
+import { toast } from "react-toastify"
+import { registerUser } from "../services/user.service"
 
 const Register = () => {
   let [data, setData] = useState({
@@ -38,6 +40,47 @@ const Register = () => {
     })
   }
 
+const submitForm = (event) => {
+  event.preventDefault();
+  console.log(data);
+
+  if(data.name == undefined || data.name.trim() == ''){
+    toast.error("Name is required!");
+    return
+  }
+
+  if(data.email == undefined || data.email.trim() == ''){
+    toast.error("Email is required!");
+    return
+  }
+
+  if(data.password == undefined || data.password.trim() == ''){
+    toast.error("Password is required!");
+    return
+  }
+
+  if(data.confirmPassword == undefined || data.confirmPassword.trim() == ''){
+    toast.error("Confirm Password is required!");
+    return
+  }
+
+  if(data.password != data.confirmPassword){
+    toast.error("Password and Confirm password not matched!");
+    return
+  }
+
+  registerUser(data)
+  .then(userData => {
+    console.log(userData)
+    toast.success("User created successfully!");
+    clearData()
+  })
+  .catch(error => {
+    console.log(error)
+    toast.error("Error in creating user! Try again");
+  })
+}
+
   const registerForm = () => {
     return (
       <Container>
@@ -59,7 +102,7 @@ const Register = () => {
 
               <h3 className="mb-4 text-center text-uppercase"> Store Signup Here</h3>
 
-              <Form>
+              <Form onSubmit={submitForm}>
                 <Form.Group className="mb-3" controlId="formName">
                   <Form.Label>Enter your name</Form.Label>
                   <Form.Control type="text" placeholder="Enter name" onChange={(event) => handleChange(event, 'name')} value={data.name}/>
@@ -94,16 +137,16 @@ const Register = () => {
                   <Form.Label>Write something about yourself</Form.Label>
                   <Form.Control as={'textarea'} rows="6" placeholder="Write here" onChange={(event) => handleChange(event, 'about')} value={data.about}/>
                 </Form.Group>
-              </Form>
 
               <Container>
                 <p className="text-center">Already register! <a href="">Login</a></p>
               </Container>
 
               <Container className="text-center">
-                <Button className="text-uppercase" variant="success">Register</Button>
+                <Button type="submit" className="text-uppercase" variant="success">Register</Button>
                 <Button className="ms-2 text-uppercase" variant="danger" onClick={clearData}>Reset</Button>
               </Container>
+              </Form>
             </Card.Body>
           </Card>
           </Col>

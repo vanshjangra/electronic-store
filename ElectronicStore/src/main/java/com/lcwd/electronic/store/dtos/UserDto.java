@@ -31,7 +31,7 @@ public class UserDto {
     private String gender;
     @NotBlank(message = "Write something about yourself!")
     private String about;
-    @ImageNameValid
+//    @ImageNameValid
     private String imageName;
     private Set<RoleDto> roles = new HashSet<>();
 }
