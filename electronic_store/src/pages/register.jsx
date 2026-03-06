@@ -1,4 +1,4 @@
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap"
+import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap"
 import Base from "../components/Base"
 import logo from "../assets/logo.png"
 import { useState } from "react"
@@ -19,6 +19,8 @@ const Register = () => {
     isError: false,
     errorData: null
   })
+
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (event, property) => {
     // console.log(event)
@@ -74,6 +76,7 @@ const submitForm = (event) => {
     return
   }
 
+  setLoading(true)
   registerUser(data)
   .then(userData => {
     console.log(userData)
@@ -87,6 +90,9 @@ const submitForm = (event) => {
       errorData: error
     })
     toast.error("Error in creating user! Try again");
+  })
+  .finally(() => {
+    setLoading(false)
   })
 }
 
@@ -160,7 +166,12 @@ const submitForm = (event) => {
               </Container>
 
               <Container className="text-center">
-                <Button type="submit" className="text-uppercase" variant="success">Register</Button>
+                <Button type="submit" className="text-uppercase" variant="success" disabled={loading}>
+                  <Spinner animation="border" size="sm" className="me-2" hidden={!loading}/>
+                  <span hidden={!loading}>Wait...</span>
+                  <span hidden={loading}>Register</span>
+                </Button>
+
                 <Button className="ms-2 text-uppercase" variant="danger" onClick={clearData}>Reset</Button>
               </Container>
               </Form>
