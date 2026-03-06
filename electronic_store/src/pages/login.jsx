@@ -1,12 +1,14 @@
 import { Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap"
 import Base from "../components/Base"
 import logo from "../assets/logo.png"
-import { data, NavLink } from "react-router-dom"
+import { data, NavLink, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { toast } from "react-toastify"
 import { loginUser } from "../services/user.service"
 
 const Login = () => {
+  let redirect = useNavigate()
+
   let [data, setData] = useState({
     email:'',
     password:''
@@ -50,6 +52,9 @@ const Login = () => {
         errorData: null,
         isError: false
       })
+
+      redirect("/users/home")
+
     })
     .catch((error) => {
       console.log(error)
