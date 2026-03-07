@@ -14,6 +14,7 @@ import Login from './pages/login';
 import Register from './pages/register';
 import Home from './pages/users/home';
 import UserProvider from './context/user.provider';
+import Order from './pages/users/order';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path='home' element={<Home/>}/>
         <Route path='profile' element={<Profile/>}/>
         <Route path='about' element={<AboutUser/>}/>
+        <Route path='orders' element={<Order/>}/>
       </Route>
     </Routes>
     </BrowserRouter>
