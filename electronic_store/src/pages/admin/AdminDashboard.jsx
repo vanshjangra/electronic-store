@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom"
-import { isAdminUser } from "../../auth/helper.auth"
+import { isAdminUser } from "../../auth/HelperAuth"
 import { useContext } from "react"
-import UserContext from "../../context/user.context"
+import UserContext from "../../context/UserContext"
 
 const AdminDashboard = () => {
   const userContext = useContext(UserContext)
