@@ -1,10 +1,13 @@
 import { useContext } from "react"
-import { NavLink, Outlet } from "react-router-dom"
+import { Navigate, NavLink, Outlet, useNavigate } from "react-router-dom"
 import UserContext from "../../context/user.context"
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import {isLoggedIn} from "../../auth/helper.auth";
 
 const Dashboard = () => {
     const userContext = useContext(UserContext);
+
+    // const redirect = useNavigate()
 
     const dashboardView = () => {
         return (
@@ -37,7 +40,7 @@ const Dashboard = () => {
     }
 
     return (
-        (userContext.isLogin) ? dashboardView() : notLoggedInView()
+        (isLoggedIn()) ? dashboardView() : <Navigate to="/login"/>
     )
 }
 

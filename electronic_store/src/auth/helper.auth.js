@@ -28,7 +28,7 @@ export const getDataFromLocalStorage = () => {
 };
 
 export const isLoggedIn = () => {
-    if(getTokenFromLocalStorage){
+    if(getTokenFromLocalStorage()){
         return true;
     }
     else{
