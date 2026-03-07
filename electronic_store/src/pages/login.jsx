@@ -2,12 +2,14 @@ import { Alert, Button, Card, Col, Container, Form, Row } from "react-bootstrap"
 import Base from "../components/Base"
 import logo from "../assets/logo.png"
 import { data, NavLink, useNavigate } from "react-router-dom"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { toast } from "react-toastify"
 import { loginUser } from "../services/user.service"
+import UserContext from "../context/user.context"
 
 const Login = () => {
-  let redirect = useNavigate()
+  const redirect = useNavigate()
+  const userContext = useContext(UserContext);
 
   let [data, setData] = useState({
     email:'',
@@ -53,6 +55,9 @@ const Login = () => {
         isError: false
       })
 
+      userContext.setIsLogin(true)
+      userContext.setUserData(data)
+      
       redirect("/users/home")
 
     })
@@ -79,6 +84,9 @@ const Login = () => {
             top: -60
           }}>
             <Card.Body>
+
+            {/* {JSON.stringify(userContext)} */}
+
               <Container className="text-center mb-3">
                 <img src={logo} alt="Store logo" width={80} height={80}/>
               </Container>

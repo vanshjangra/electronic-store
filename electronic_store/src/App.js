@@ -13,9 +13,12 @@ import { Flip, ToastContainer, Zoom } from 'react-toastify';
 import Login from './pages/login';
 import Register from './pages/register';
 import Home from './pages/users/home';
+import UserProvider from './context/user.provider';
 
 function App() {
   return (
+
+  <UserProvider>
     <BrowserRouter>
       <ToastContainer position='bottom-center' theme='dark' draggable/>
       <CustomNavbar/>
@@ -34,6 +37,7 @@ function App() {
       </Route>
     </Routes>
     </BrowserRouter>
+  </UserProvider>
   );
 }
 
