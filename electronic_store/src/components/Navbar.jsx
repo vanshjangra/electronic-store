@@ -11,8 +11,7 @@ const CustomNavbar = () => {
   const userContext = useContext(UserContext)
 
   const doLogout = () => {
-    userContext.setIsLogin(false)
-    userContext.setUserData(null)
+    userContext.logout()
   }
 
     return (
@@ -49,7 +48,7 @@ const CustomNavbar = () => {
             {
               (userContext.isLogin) ? (
                 <>
-                <Nav.Link as={NavLink} to='/users/home'>{userContext.userData.user.email}</Nav.Link>
+                <Nav.Link as={NavLink} to='/users/home'>{userContext.userData?.user?.email}</Nav.Link>
                 <Nav.Link onClick={doLogout}>Logout</Nav.Link>
                 </>
               ) : (

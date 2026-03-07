@@ -55,8 +55,10 @@ const Login = () => {
         isError: false
       })
 
-      userContext.setIsLogin(true)
-      userContext.setUserData(data)
+      // userContext.setIsLogin(true)
+      // userContext.setUserData(data)
+
+      userContext.login(data);
       
       redirect("/users/home")
 
