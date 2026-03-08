@@ -20,7 +20,7 @@ const Profile = () => {
 
         getUserDataFromServer()
         
-    }, [userContext.userData])
+    }, [])
 
     const getUserDataFromServer = () => {
         console.log(userContext)
