@@ -1,4 +1,4 @@
-import { Alert, Col, Container, Row, Modal, Button, Card, Table, Form } from "react-bootstrap"
+import { Alert, Col, Container, Row, Modal, Button, Card, Table, Form, Spinner } from "react-bootstrap"
 import UserProfileView from "../../components/users/UserProfileView"
 import { useContext, useEffect, useState } from "react"
 import UserContext from '../../context/UserContext'
@@ -12,6 +12,8 @@ const Profile = () => {
     const [user, setUser] = useState(null)
 
     const [show, setShow] = useState(false);
+
+    const [updateLoading, setUpdateLoading] = useState(false)
 
     const handleClose = () => setShow(false);
     const handleShowModal = () => {
@@ -59,14 +61,24 @@ const Profile = () => {
             return
         }
 
+        setUpdateLoading(true)
         updateUser(user)
         .then(updatedUser => {
             console.log(updatedUser)
             toast.success("User details updated!")
+            handleClose()
         })
         .catch(error => {
             console.log(error)
+
+            // if(error.response.status == 400){
+            //     toast.error(error.response.data.name)
+            // }
+
             toast.error("Not updated! Error")
+        })
+        .finally(() => {
+            setUpdateLoading(false)
         })
     }
 
@@ -83,12 +95,12 @@ const Profile = () => {
                     borderRadius: "50px"
                 }}>
                     <Card.Body>
-                    <Table className="text-center" responsive hover>
+                    <Table className="" responsive hover>
                     <tbody>
                         <tr>
                             <td>Name</td>
                             <td>
-                              <Form.Control className="text-center" type="text"
+                              <Form.Control className="" type="text"
                                             value={user.name} onChange={(event) => updateFieldHandler(event, 'name')}/>  
                             </td>
                         </tr>
@@ -103,6 +115,7 @@ const Profile = () => {
                             <td>
                                 <Form.Control type="Password" placeholder="Enter new password here"
                                               onChange={(event) => updateFieldHandler(event, 'password')}/>
+                                      <p>Leave the field blank for same password</p>        
                             </td>
                         </tr>
 
@@ -133,8 +146,11 @@ const Profile = () => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={updateUserData}>
-            Save Changes
+
+          <Button variant="primary" onClick={updateUserData} disabled={updateLoading}>
+            <Spinner animation="border" size="sm" hidden={!updateLoading} className="me-2"/>
+            <span hidden={!updateLoading}>Updating</span>
+            <span hidden={updateLoading}>Save Changes</span>
           </Button>
         </Modal.Footer>
       </Modal>
@@ -148,8 +164,8 @@ const Profile = () => {
             <Row>
              <Col md={
                 {
-                    span: 8,
-                    offset: 2
+                    span: 10,
+                    offset: 1
                 }
              }>
               
