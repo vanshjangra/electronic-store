@@ -1,4 +1,4 @@
-import { publicAxios } from "./axios.service"
+import { privateAxios, publicAxios } from "./axios.service"
 
 export const registerUser = (userData) => {
     return publicAxios.post(`/users`, userData).then((response) => response.data);
@@ -10,4 +10,8 @@ export const loginUser = (loginData) => {
 
 export const getUser = (userId) => {
     return publicAxios.get(`/users/${userId}`).then((response) => response.data);
+}
+
+export const updateUser = (user) => {
+    return privateAxios.put(`/users/${user.userId}`, user).then((response) => response.data);
 }

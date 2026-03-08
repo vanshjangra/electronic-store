@@ -3,7 +3,7 @@ import UserProfileView from "../../components/users/UserProfileView"
 import { useContext, useEffect, useState } from "react"
 import UserContext from '../../context/UserContext'
 import { toast } from "react-toastify"
-import { getUser } from "../../services/user.service"
+import { getUser, updateUser } from "../../services/user.service"
 import { useParams } from "react-router-dom"
 
 const Profile = () => {
@@ -49,6 +49,24 @@ const Profile = () => {
         setUser({
             ...user,
             [property]: event.target.value
+        })
+    }
+
+    const updateUserData = () => {
+        console.log("Updating user data")
+        if(user.name === undefined || user.name.trim() === ''){
+            toast.error("User name required!")
+            return
+        }
+
+        updateUser(user)
+        .then(updatedUser => {
+            console.log(updatedUser)
+            toast.success("User details updated!")
+        })
+        .catch(error => {
+            console.log(error)
+            toast.error("Not updated! Error")
         })
     }
 
@@ -115,7 +133,7 @@ const Profile = () => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={updateUserData}>
             Save Changes
           </Button>
         </Modal.Footer>
