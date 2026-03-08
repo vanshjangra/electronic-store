@@ -1,5 +1,5 @@
 import { Button, Card, Container, Table } from "react-bootstrap"
-import profileImage from "./../../assets/unnamed.jpg"
+import profileImage from "./../../assets/default_profile.jpg"
 import { BASE_URL } from "../../services/helper.service"
 
 const UserProfileView = ({user = null}) => {
@@ -51,7 +51,7 @@ const UserProfileView = ({user = null}) => {
 
                         <tr>
                             <td>Roles</td>
-                            <td>{user.roles.map(role => <div>{role.roleName}</div>)}</td>
+                            <td>{user.roles.map(role => <div key={role.roleId}>{role.roleName}</div>)}</td>
                         </tr>
                     </tbody>
                 </Table>
