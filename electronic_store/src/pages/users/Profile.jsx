@@ -4,20 +4,26 @@ import { useContext, useEffect, useState } from "react"
 import UserContext from '../../context/UserContext'
 import { toast } from "react-toastify"
 import { getUser } from "../../services/user.service"
+import { useParams } from "react-router-dom"
 
 const Profile = () => {
     const userContext = useContext(UserContext)
+    const {userId} = useParams()
     const [user, setUser] = useState(null)
 
     useEffect(() => {
-        if(userContext.userData){
-            getUserDataFromServer()
-        }
+        // console.log("Data from url userid " + userId)
+
+        // if(userContext.userData){
+        //     getUserDataFromServer()
+        // }
+
+        getUserDataFromServer()
+        
     }, [userContext.userData])
 
     const getUserDataFromServer = () => {
         console.log(userContext)
-        const userId = userContext.userData.user.userId
 
         getUser(userId)
         .then(data => {
