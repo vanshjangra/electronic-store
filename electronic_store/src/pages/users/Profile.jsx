@@ -45,6 +45,13 @@ const Profile = () => {
         })
     }
 
+    const updateFieldHandler = (event, property) => {
+        setUser({
+            ...user,
+            [property]: event.target.value
+        })
+    }
+
     const updateViewModal = () => {
         return (
             <div>
@@ -63,13 +70,22 @@ const Profile = () => {
                         <tr>
                             <td>Name</td>
                             <td>
-                              <Form.Control className="text-center" type="text" value={user.name}/>  
+                              <Form.Control className="text-center" type="text"
+                                            value={user.name} onChange={(event) => updateFieldHandler(event, 'name')}/>  
                             </td>
                         </tr>
 
                         <tr>
                             <td>Email</td>
                             <td>{user.email}</td>
+                        </tr>
+
+                        <tr>
+                            <td>New Password</td>
+                            <td>
+                                <Form.Control type="Password" placeholder="Enter new password here"
+                                              onChange={(event) => updateFieldHandler(event, 'password')}/>
+                            </td>
                         </tr>
 
                         <tr>
@@ -80,7 +96,8 @@ const Profile = () => {
                         <tr>
                             <td>About</td>
                             <td>
-                                <Form.Control as={'textarea'} value={user.about} rows={8}/>
+                                <Form.Control as={'textarea'} value={user.about} rows={8}
+                                              onChange={(event) => updateFieldHandler(event, 'about')}/>
                             </td>
                         </tr>
 
