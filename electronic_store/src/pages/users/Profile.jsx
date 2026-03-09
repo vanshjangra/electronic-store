@@ -1,4 +1,4 @@
-import { Alert, Col, Container, Row, Modal, Button, Card, Table, Form, Spinner } from "react-bootstrap"
+import { Alert, Col, Container, Row, Modal, Button, Card, Table, Form, Spinner, InputGroup } from "react-bootstrap"
 import UserProfileView from "../../components/users/UserProfileView"
 import { useContext, useEffect, useState } from "react"
 import UserContext from '../../context/UserContext'
@@ -129,6 +129,13 @@ const Profile = () => {
         }
     }
 
+    const clearImage = (event) => {
+        setImage({
+            placeholder: defaultImage,
+            file: null
+        })
+    }
+
     const updateViewModal = () => {
         return (
             <div>
@@ -155,7 +162,11 @@ const Profile = () => {
                                     <img style={{objectFit: 'cover'}} height={200} width={200} src={image.placeholder} alt=""/>
                                 </Container>
 
+                                <InputGroup>
                                 <Form.Control type="file" onChange={handleProfileImageChange}/>
+                                <Button onClick={clearImage} variant="outline-secondary">Clear</Button>
+                                </InputGroup>
+
                                 <p className="mt-2 text-muted">Select Square size picture for better ui.</p>
                             </td>
                         </tr>
