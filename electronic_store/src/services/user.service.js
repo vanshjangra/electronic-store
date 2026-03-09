@@ -15,3 +15,13 @@ export const getUser = (userId) => {
 export const updateUser = (user) => {
     return privateAxios.put(`/users/${user.userId}`, user).then((response) => response.data);
 }
+
+export const updateUserProfilePicture = (file, userId) => {
+    if(file == null){
+        return;
+    }
+
+    const data = new FormData();
+    data.append("userImage", file);
+    return privateAxios.post(`/users/image/${userId}`, data).then((response) => response.data);
+};

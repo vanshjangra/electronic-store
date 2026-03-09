@@ -3,13 +3,19 @@ import UserProfileView from "../../components/users/UserProfileView"
 import { useContext, useEffect, useState } from "react"
 import UserContext from '../../context/UserContext'
 import { toast } from "react-toastify"
-import { getUser, updateUser } from "../../services/user.service"
+import { getUser, updateUser, updateUserProfilePicture } from "../../services/user.service"
 import { useParams } from "react-router-dom"
+import defaultImage from '../../assets/default_profile.jpg'
 
 const Profile = () => {
     const userContext = useContext(UserContext)
     const {userId} = useParams()
     const [user, setUser] = useState(null)
+
+    const [image, setImage] = useState({
+        placeholder: defaultImage,
+        file: null 
+    })
 
     const [show, setShow] = useState(false);
 
@@ -66,7 +72,27 @@ const Profile = () => {
         .then(updatedUser => {
             console.log(updatedUser)
             toast.success("User details updated!")
-            handleClose()
+
+            if(image.file == null){
+                setUpdateLoading(false)
+                handleClose()
+                return
+            }
+            updateUserProfilePicture(image.file, user.userId)
+            .then(data => {
+                console.log(data)
+                toast.success(data.message)
+                handleClose()
+            })
+            .catch(error => {
+                console.log(error)
+                toast.error("Image not uploaded!")
+            })
+            .finally(() => {
+                setUpdateLoading(false)
+            })
+
+            // handleClose()
         })
         .catch(error => {
             console.log(error)
@@ -76,10 +102,31 @@ const Profile = () => {
             // }
 
             toast.error("Not updated! Error")
-        })
-        .finally(() => {
             setUpdateLoading(false)
         })
+    }
+
+    const handleProfileImageChange = (event) => {
+        // const localFile = event.target.files[0]
+        console.log(event.target.files[0])
+        if(event.target.files[0].type === 'image/png' || event.target.files[0].type == 'image/jpeg'){
+            const reader = new FileReader()
+
+            reader.onload = (r) => {
+                setImage({
+                    placeholder: r.target.result,
+                    file: event.target.files[0]
+                })
+
+                console.log(r.target.result)
+            }
+
+            reader.readAsDataURL(event.target.files[0])
+        }
+        else{
+            toast.error("Invalid File!")
+            image.file = null
+        }
     }
 
     const updateViewModal = () => {
@@ -97,6 +144,22 @@ const Profile = () => {
                     <Card.Body>
                     <Table className="" responsive hover>
                     <tbody>
+
+                        <tr>
+                            <td>
+                                Profile Image
+                            </td>
+                            
+                            <td>
+                                <Container className="text-center mb-3">
+                                    <img style={{objectFit: 'cover'}} height={200} width={200} src={image.placeholder} alt=""/>
+                                </Container>
+
+                                <Form.Control type="file" onChange={handleProfileImageChange}/>
+                                <p className="mt-2 text-muted">Select Square size picture for better ui.</p>
+                            </td>
+                        </tr>
+
                         <tr>
                             <td>Name</td>
                             <td>
