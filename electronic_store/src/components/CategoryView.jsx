@@ -1,10 +1,11 @@
 import { Button, Card, Col, Container, Row } from "react-bootstrap"
-import image from '../assets/unnamed.jpg'
+import image from '../assets/logo.png'
 
-const CategoryView = () => {
+const CategoryView = ({category}) => {
     const imageStyle = {
         width: "100px",
-        height: "100px"
+        height: "100px",
+        objectFit: "cover"
     }
 
   return (
@@ -13,13 +14,14 @@ const CategoryView = () => {
         <Card.Body>
             <Row className="align-items-center">
                 <Col md={2} className="text-center">
-                    <img src={image} className="rounded-circle" style={imageStyle} alt="" />
+                    <img src={(category.coverImage ? (category.coverImage.startsWith("http") ? category.coverImage : image) : image)}
+                         className="rounded-circle" style={imageStyle} alt="" />
                 </Col>
 
                 <Col md={8}>
-                   <h5>Category Title</h5>
+                   <h5>{category.title}</h5>
 
-                   <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque repellat esse nulla aut quas amet quo exercitationem? Dicta, impedit unde.</p>
+                   <p>{category.description}</p>
                 </Col>
 
                 <Col md={2}>

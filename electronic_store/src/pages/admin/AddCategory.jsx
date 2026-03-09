@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Button, Card, Container, Form, FormGroup, Spinner } from "react-bootstrap"
 import { toast } from "react-toastify"
-import { addCategory } from "../../services/product.service"
+import { addCategory } from "../../services/CategoryService"
 
 const AddCategory = () => {
   const [category, setCategory] = useState({
