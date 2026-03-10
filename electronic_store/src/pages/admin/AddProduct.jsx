@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Button, Card, Col, Container, Form, FormGroup, InputGroup, Row } from "react-bootstrap"
 import { toast } from "react-toastify"
-import { createProductWithoutCategory } from "../../services/product.service"
+import { addProductImage, createProductWithoutCategory } from "../../services/product.service"
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
@@ -66,9 +66,12 @@ const AddProduct = () => {
     createProductWithoutCategory(product)
     .then(data => {
       console.log(data)
-      toast.success("Product is created!")
 
-      setProduct({
+      addProductImage(product.image, data.productId)
+      .then(data1 => {
+        console.log(data1)
+        toast.success("Image uploaded")
+        setProduct({
         title: '',
         description: '',
         price: 0,
@@ -79,6 +82,13 @@ const AddProduct = () => {
         image: undefined,
         imagerPreview: undefined
       })
+      })
+      .catch(error => {
+        console.log(error)
+        toast.error("Error in uploading image")
+      })
+
+      toast.success("Product is created!")
     })
     .catch(error => {
       console.log(error)
@@ -130,7 +140,7 @@ const AddProduct = () => {
               <Col>
               <FormGroup className="mt-3">
               <Form.Label>Discounted Price</Form.Label>
-              <Form.Control type="number" placeholder="Enter here"
+              <Form.Control type="number" placeholder="Enter here" value={product.discountedPrice}
                             onChange={(event) => {
 
                               if(event.target.value > product.price){
