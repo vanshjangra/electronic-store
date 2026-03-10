@@ -4,11 +4,14 @@ import {deleteCategory, getCategories, updateCategory} from "../../services/Cate
 import { toast } from "react-toastify"
 import Swal from "sweetalert2"
 import { Container, Spinner, Modal, Button, Form, FormGroup } from "react-bootstrap"
+import InfiniteScroll from "react-infinite-scroll-component"
 
 const ViewCategories = () => {
   const [categories, setCategories] = useState({
     content: []
   })
+
+  const [currentPage, setCurrentPage] = useState(0)
 
   const [selectedCategory, setSelectedCategory] = useState(undefined)
 
@@ -26,7 +29,7 @@ const ViewCategories = () => {
 
   useEffect(() => {
     setLoading(true)
-    getCategories()
+    getCategories(0, 6)
     .then(data => {
       console.log(data);
       setCategories(data)
@@ -39,6 +42,29 @@ const ViewCategories = () => {
       setLoading(false)
     })
   }, [])
+
+  useEffect(() => {
+    if(currentPage > 0){
+    getCategories(currentPage, 6)
+    .then(data => {
+      console.log(data);
+      setCategories(
+        {
+          content: [...categories.content, ...data.content],
+          lastPage: data.lastPage,
+          pageNumber: data.pageNumber,
+          pageSize: data.pageSize,
+          totalElements: data.totalElements,
+          totalPages: data.totalPages
+        }
+      )
+    })
+    .catch(error => {
+      console.log(error)
+      toast.error("Error in loading categories from server!")
+    })
+    }
+  }, [currentPage])
 
   const deleteCategoryMain = (categoryId) => {
         Swal.fire({
@@ -122,6 +148,11 @@ const ViewCategories = () => {
       console.log(error)
       toast.error("Error in updating category!")
     })
+  }
+
+  const loadNextPage = () => {
+    console.log("Loading next page")
+    setCurrentPage(currentPage + 1)
   }
 
   const modalView = () => {
@@ -222,6 +253,14 @@ const ViewCategories = () => {
     {
       (categories.content.length > 0 ? (
     <>
+
+    <InfiniteScroll dataLength={categories.content.length} next={loadNextPage} hasMore={!categories.lastPage}
+                    loader={<h2 className="p-2 text-center">Loading...</h2>}
+                    endMessage = {
+                      <p style={{textAlign: 'center'}}>
+                        <b>Yah! You have seen it all</b>
+                      </p>
+                    }>
      {
       categories.content.map((category) => {
         return (
@@ -230,6 +269,8 @@ const ViewCategories = () => {
         )
       })
      }
+    </InfiniteScroll>
+
     </>
       ) : <h5 className="text-center">No Categories in database</h5>)
     }

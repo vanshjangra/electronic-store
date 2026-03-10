@@ -4,8 +4,8 @@ export const addCategory = (category) => {
     return privateAxios.post(`/categories`, category).then((response) => response.data);
 };
 
-export const getCategories = () => {
-    return privateAxios.get(`/categories`).then((response) => response.data);
+export const getCategories = (currentPage = 0, pageSize = 10) => {
+    return privateAxios.get(`/categories?pageNumber=${currentPage}&&pageSize=${pageSize}`).then((response) => response.data);
 };
 
 export const deleteCategory= (categoryId) => {
