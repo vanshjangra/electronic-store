@@ -57,7 +57,8 @@ public class CategoryController {
     public ResponseEntity<PageableResponse<CategoryDto>> getAll(@RequestParam(value = "pageNumber", defaultValue = "0", required = false) int pageNumber,
                                                                 @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize,
                                                                 @RequestParam(value = "sortBy", defaultValue = "title", required = false) String sortBy,
-                                                                @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir){
+                                                                @RequestParam(value = "sortDir", defaultValue = "asc", required = false) String sortDir) throws InterruptedException {
+//        Thread.sleep(1000);
         PageableResponse<CategoryDto> pageableResponse = categoryService.getAll(pageNumber, pageSize, sortBy, sortDir);
         return new ResponseEntity<>(pageableResponse, HttpStatus.OK);
     }

@@ -3,6 +3,7 @@ import CategoryView from "../../components/CategoryView"
 import {deleteCategory, getCategories} from "../../services/CategoryService"
 import { toast } from "react-toastify"
 import Swal from "sweetalert2"
+import { Container, Spinner } from "react-bootstrap"
 
 const ViewCategories = () => {
   const [categories, setCategories] = useState({
@@ -63,7 +64,16 @@ const ViewCategories = () => {
         })
   }
 
-  return categories.content.length > 0 ? (
+  return (<div>
+    <Container className="text-center p-3" hidden={!loading}>
+      <Spinner/>
+      <div>
+        <h3>Loading...</h3>
+      </div>
+    </Container>
+
+    {
+      (categories.content.length > 0 ? (
     <>
      {
       categories.content.map((category) => {
@@ -71,7 +81,9 @@ const ViewCategories = () => {
       })
      }
     </>
-  ) : <h5 className="text-center">No Categories in database</h5>
+      ) : <h5 className="text-center">No Categories in database</h5>)
+    }
+  </div>)
 }
 
 export default ViewCategories
