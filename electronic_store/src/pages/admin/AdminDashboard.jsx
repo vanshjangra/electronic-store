@@ -14,13 +14,12 @@ const AdminDashboard = () => {
       <Container className="p-5">
         <Row>
           <Col md={{
-            span: 2,
-            offset: 1
+            span: 2
           }} className="">
           <SideMenu/>
           </Col>
 
-          <Col md={9} className="ps-3 pt-2">
+          <Col md={10} className="ps-3 pt-2">
           <Outlet/>
           </Col>
         </Row>

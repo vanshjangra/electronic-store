@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import CategoryView from "../../components/CategoryView"
-import {deleteCategory, getCategories} from "../../services/CategoryService"
+import {deleteCategory, getCategories, updateCategory} from "../../services/CategoryService"
 import { toast } from "react-toastify"
 import Swal from "sweetalert2"
-import { Container, Spinner, Modal, Button } from "react-bootstrap"
+import { Container, Spinner, Modal, Button, Form, FormGroup } from "react-bootstrap"
 
 const ViewCategories = () => {
   const [categories, setCategories] = useState({
@@ -18,6 +18,11 @@ const ViewCategories = () => {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const [showUpdate, setShowUpdate] = useState(false);
+
+  const handleCloseUpdate = () => setShowUpdate(false);
+  const handleShowUpdate = () => setShowUpdate(true);
 
   useEffect(() => {
     setLoading(true)
@@ -79,7 +84,44 @@ const ViewCategories = () => {
   }
 
   const handleUpdate = (category) => {
-    alert("Update button clicked")
+    setSelectedCategory(category)
+    handleShowUpdate()
+  }
+
+  const updateCategoryClicked = (event) => {
+    event.preventDefault()
+
+    if(selectedCategory.title == undefined || selectedCategory.title.trim() === ''){
+      toast.error("Title required!")
+      return
+    }
+
+    updateCategory(selectedCategory)
+    .then(data => {
+      console.log(data)
+      toast.success("Category updated")
+
+      const newCategories = categories.content.map(cat => {
+        if(cat.categoryId === selectedCategory.categoryId){
+          cat.title = data.title
+          cat.description = data.description
+          cat.coverImage = data.coverImage
+        }
+
+        return cat;
+      })
+
+      setCategories({
+        ...categories,
+        content: newCategories
+      })
+
+      handleCloseUpdate()
+    })
+    .catch(error => {
+      console.log(error)
+      toast.error("Error in updating category!")
+    })
   }
 
   const modalView = () => {
@@ -106,7 +148,61 @@ const ViewCategories = () => {
                     <Button variant="secondary" onClick={handleClose}>
                       Close
                     </Button>
-                    <Button variant="primary" onClick={handleClose}>
+                  </Modal.Footer>
+          </Modal>
+      </>
+    )
+  }
+
+  const modalUpdate = () => {
+    return (
+      <>
+          <Modal animation={false} show={showUpdate} onHide={handleCloseUpdate}>
+            <Modal.Header closeButton>
+              <Modal.Title>{selectedCategory.title}</Modal.Title>
+                  </Modal.Header>
+                    <Modal.Body>
+                      
+                      <Form>
+                        <FormGroup>
+                          <Form.Label>Category Title</Form.Label>
+                          <Form.Control type="text" placeholder="Enter here" value={selectedCategory.title}
+                                        onChange={(event) => setSelectedCategory({
+                                          ...selectedCategory,
+                                          title: event.target.value
+                                        })}/>
+                        </FormGroup>
+
+                        <FormGroup className="mt-3">
+                          <Form.Label>Category Description</Form.Label>
+                          <Form.Control as={'textarea'} value={selectedCategory.description} rows={6}
+                                        onChange={(event) => setSelectedCategory({
+                                          ...selectedCategory,
+                                          description: event.target.value
+                                        })}/>
+                        </FormGroup>
+
+                        <FormGroup>
+                          <Container className="py-3">
+                            <img src={selectedCategory.coverImage} alt="" className="img-fluid"/>
+                          </Container>
+
+                          <Form.Label>Category Image Url</Form.Label>
+                          <Form.Control type="text" placeholder="Enter here" value={selectedCategory.coverImage}
+                                        onChange={(event) => setSelectedCategory({
+                                          ...selectedCategory,
+                                          coverImage: event.target.value
+                                        })}/>
+                        </FormGroup>
+                      </Form>
+
+                    </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseUpdate}>
+                      Close
+                    </Button>
+
+                    <Button variant="success" onClick={updateCategoryClicked}>
                       Save Changes
                     </Button>
                   </Modal.Footer>
@@ -140,6 +236,10 @@ const ViewCategories = () => {
 
     {
       selectedCategory ? modalView() : ''
+    }
+
+    {
+      selectedCategory ? modalUpdate() : ''
     }
   </div>)
 }
