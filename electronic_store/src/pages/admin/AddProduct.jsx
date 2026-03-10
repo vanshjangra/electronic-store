@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button, Card, Col, Container, Form, FormGroup, InputGroup, Row } from "react-bootstrap"
 import { toast } from "react-toastify"
-import { addProductImage, createProductWithoutCategory } from "../../services/product.service"
+import { addProductImage, createProductInCategory, createProductWithoutCategory } from "../../services/product.service"
+import {getCategories} from '../../services/CategoryService'
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
@@ -15,6 +16,21 @@ const AddProduct = () => {
     image: undefined,
     imagerPreview: undefined
   })
+
+  const [categories, setCategories] = useState(undefined)
+  const [selectedCategoryId, setSelectedCategoryId] = useState("none")
+
+  useEffect(() => {
+    getCategories(0, 1000)
+    .then(data => {
+      console.log(data)
+      setCategories(data)
+    })
+    .catch((error) => {
+      console.log(error)
+      toast.error("Error in loading categories")
+    })
+  }, [])
 
   const handleFileChange = (event) => {
     if(event.target.files[0].type === 'image/png' || event.target.files[0].type == 'image/jpeg'){
@@ -63,6 +79,7 @@ const AddProduct = () => {
       return
     }
 
+    if(selectedCategoryId === 'none'){
     createProductWithoutCategory(product)
     .then(data => {
       console.log(data)
@@ -94,6 +111,40 @@ const AddProduct = () => {
       console.log(error)
       toast.error("Error in creating product! check product details")
     })
+  }
+  else{
+    createProductInCategory(product, selectedCategoryId)
+    .then(data => {
+      console.log(data)
+
+      addProductImage(product.image, data.productId)
+      .then(data1 => {
+        console.log(data1)
+        toast.success("Image uploaded")
+        setProduct({
+        title: '',
+        description: '',
+        price: 0,
+        discountedPrice: 0,
+        quantity: 1,
+        live: false,
+        stock: true,
+        image: undefined,
+        imagerPreview: undefined
+      })
+      })
+      .catch(error => {
+        console.log(error)
+        toast.error("Error in uploading image")
+      })
+
+      toast.success("Product is created!")
+    })
+    .catch(error => {
+      console.log(error)
+      toast.error("Error in creating product! check product details")
+    })
+  }
   }
 
   const formView = () => {
@@ -211,6 +262,22 @@ const AddProduct = () => {
                 }} variant="outline-secondary">Clear</Button>
             </InputGroup>
 
+            </Form.Group>
+
+            {/* {JSON.stringify(selectedCategoryId)} */}
+
+            <Form.Group className="mt-3">
+              <Form.Label>Select Category</Form.Label>
+              <Form.Select onChange={(event) => setSelectedCategoryId(event.target.value)}>
+                <option value="none">None</option>
+                {
+                  (categories) ? <>
+                  {
+                    categories.content.map(cat => <option key={cat.categoryId} value={cat.categoryId}>{cat.title}</option>)
+                  }
+                  </> : ''
+                }
+              </Form.Select>
             </Form.Group>
 
             <Container className="text-center mt-3">
