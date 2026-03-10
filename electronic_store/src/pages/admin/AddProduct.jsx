@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { Button, Card, Col, Container, Form, FormGroup, InputGroup, Row } from "react-bootstrap"
 import { toast } from "react-toastify"
+import { createProductWithoutCategory } from "../../services/product.service"
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
@@ -39,6 +40,52 @@ const AddProduct = () => {
     }
   }
 
+  const submitAddProductForm = (event) => {
+    event.preventDefault()
+
+    if(product.title === undefined || product.title.trim() === ''){
+      toast.error("Title is required!")
+      return
+    }
+
+    if(product.description === undefined || product.description.trim() === ''){
+      toast.error("Description is required!")
+      return
+    }
+
+    if(product.price <= 0){
+      toast.error("Invalid price!")
+      return
+    }
+
+    if(product.discountedPrice <= 0 || product.discountedPrice >= product.price){
+      toast.error("Invalid discounted price!")
+      return
+    }
+
+    createProductWithoutCategory(product)
+    .then(data => {
+      console.log(data)
+      toast.success("Product is created!")
+
+      setProduct({
+        title: '',
+        description: '',
+        price: 0,
+        discountedPrice: 0,
+        quantity: 1,
+        live: false,
+        stock: true,
+        image: undefined,
+        imagerPreview: undefined
+      })
+    })
+    .catch(error => {
+      console.log(error)
+      toast.error("Error in creating product! check product details")
+    })
+  }
+
   const formView = () => {
     return (
       <>
@@ -49,7 +96,7 @@ const AddProduct = () => {
         <Card.Body>
           <h5>Add Product here</h5>
 
-          <Form>
+          <Form onSubmit={submitAddProductForm}>
             <FormGroup className="mt-2">
               <Form.Label>Product title</Form.Label>
               <Form.Control type="text" placeholder="Enter here" value={product.title}
@@ -103,7 +150,11 @@ const AddProduct = () => {
 
             <FormGroup className="mt-3">
               <Form.Label>Product Quantity</Form.Label>
-              <Form.Control type="number" placeholder="Enter here"/>
+              <Form.Control type="number" placeholder="Enter here" value={product.quantity}
+                            onChange={(event) => setProduct({
+                              ...product,
+                              quantity: event.target.value
+                            })}/>
             </FormGroup>     
 
             <Row className="mt-3 px-1">
@@ -153,7 +204,7 @@ const AddProduct = () => {
             </Form.Group>
 
             <Container className="text-center mt-3">
-              <Button variant="success" size="sm">Add Product</Button>
+              <Button type="submit" variant="success" size="sm">Add Product</Button>
               <Button variant="danger" className="ms-1" size="sm">Clear Data</Button>
             </Container>
           </Form>
