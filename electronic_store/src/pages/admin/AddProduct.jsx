@@ -59,6 +59,22 @@ const AddProduct = () => {
     }
   }
 
+  const clearForm = () => {
+    editorRef.current.setContent('')
+
+    setProduct({
+      title: '',
+      description: '',
+      price: 0,
+      discountedPrice: 0,
+      quantity: 1,
+      live: false,
+      stock: true,
+      image: undefined,
+      imagerPreview: undefined
+    })
+  }
+
   const submitAddProductForm = (event) => {
     event.preventDefault()
 
@@ -87,28 +103,23 @@ const AddProduct = () => {
     .then(data => {
       console.log(data)
 
+      toast.success("Product is created!")
+      if(!product.image){
+        clearForm()
+        return
+      }
+
       addProductImage(product.image, data.productId)
       .then(data1 => {
         console.log(data1)
         toast.success("Image uploaded")
-        setProduct({
-        title: '',
-        description: '',
-        price: 0,
-        discountedPrice: 0,
-        quantity: 1,
-        live: false,
-        stock: true,
-        image: undefined,
-        imagerPreview: undefined
-      })
+        
+        clearForm()
       })
       .catch(error => {
         console.log(error)
         toast.error("Error in uploading image")
       })
-
-      toast.success("Product is created!")
     })
     .catch(error => {
       console.log(error)
@@ -120,28 +131,22 @@ const AddProduct = () => {
     .then(data => {
       console.log(data)
 
+      toast.success("Product is created!")
+      if(!product.image){
+        clearForm()
+        return
+      }
       addProductImage(product.image, data.productId)
       .then(data1 => {
         console.log(data1)
         toast.success("Image uploaded")
-        setProduct({
-        title: '',
-        description: '',
-        price: 0,
-        discountedPrice: 0,
-        quantity: 1,
-        live: false,
-        stock: true,
-        image: undefined,
-        imagerPreview: undefined
-      })
+        
+        clearForm()
       })
       .catch(error => {
         console.log(error)
         toast.error("Error in uploading image")
       })
-
-      toast.success("Product is created!")
     })
     .catch(error => {
       console.log(error)
@@ -309,7 +314,7 @@ const AddProduct = () => {
 
             <Container className="text-center mt-3">
               <Button type="submit" variant="success" size="sm">Add Product</Button>
-              <Button variant="danger" className="ms-1" size="sm">Clear Data</Button>
+              <Button onClick={clearForm} variant="danger" className="ms-1" size="sm">Clear Data</Button>
             </Container>
           </Form>
         </Card.Body>
