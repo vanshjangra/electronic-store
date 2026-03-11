@@ -3,12 +3,13 @@ import { Card, Col, Container, Form, Pagination, Row, Table } from "react-bootst
 import { getAllProducts } from "../../services/product.service"
 import { toast } from "react-toastify"
 import SingleProductView from "../../components/admin/SingleProductView"
+import { PRODUCT_PAGE_SIZE } from "../../services/helper.service"
 
 const ViewProducts = () => {
   const [products, setProducts] = useState(undefined)
 
   useEffect(() => {
-    getProducts(0, 10, 'addedDate', 'desc')
+    getProducts(0, PRODUCT_PAGE_SIZE, 'addedDate', 'desc')
   }, [])
 
   const getProducts = (pageNumber = 0, pageSize = 10, sortBy = 'addedDate', sortDir = 'asc') => {
@@ -63,11 +64,31 @@ const ViewProducts = () => {
 
         <Container className="d-flex justify-content-end">
           <div>
-          <Pagination>
-            <Pagination.Prev></Pagination.Prev>
-            <Pagination.Item>2</Pagination.Item>
-            <Pagination.Item>3</Pagination.Item>
-            <Pagination.Next></Pagination.Next>
+          <Pagination size="md">
+            <Pagination.First />
+              <Pagination.Prev onClick={(event) => {
+                if ((products.pageNumber - 1) < 0)
+                 return
+                 getProducts(products.pageNumber - 1, PRODUCT_PAGE_SIZE, 'addedDate', 'desc')
+                }}/>
+
+                {
+                  [...Array(products.totalPages)]
+                  .map((ob, i) => i)
+                  .map(item => {return products.pageNumber == item ? 
+                  <Pagination.Item active key={item}>{item + 1}</Pagination.Item> : 
+                  <Pagination.Item onClick={(event) => {
+                    getProducts(item, PRODUCT_PAGE_SIZE, 'addedDate', 'desc')
+                  }} key={item}>{item + 1}
+                  </Pagination.Item>})
+                }
+
+              <Pagination.Next onClick={(event) => {
+                if (products.lastPage)
+                  return
+                  getProducts(products.pageNumber + 1, PRODUCT_PAGE_SIZE, 'addedDate', 'desc')
+              }}/>
+            <Pagination.Last />
           </Pagination>
           </div>
         </Container>
