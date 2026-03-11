@@ -39,16 +39,16 @@ const ViewProducts = () => {
           <Table className="text-center" bordered striped hover responsive size="sm">
           <thead>
             <tr>
-              <th>#SN</th>
-              <th>Title</th>
-              <th>Quantity</th>
-              <th>Price</th>
-              <th>Discounted Price</th>
-              <th>Live</th>
-              <th>Stock</th>
-              <th>Category</th>
-              <th>Added Date</th>
-              <th>Action</th>
+              <th className="px-3 small">SN</th>
+              <th className="px-3 small">Title</th>
+              <th className="px-3 small">Quantity</th>
+              <th className="px-3 small">Price</th>
+              <th className="px-3 small">Discounted</th>
+              <th className="px-3 small">Live</th>
+              <th className="px-3 small">Stock</th>
+              <th className="px-3 small">Category</th>
+              <th className="px-3 small">Date</th>
+              <th className="px-3 small">Action</th>
             </tr>
           </thead> 
 
