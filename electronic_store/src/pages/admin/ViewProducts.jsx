@@ -26,6 +26,14 @@ const ViewProducts = () => {
     })
   }
 
+  const updateProductList = (productId) => {
+    const newArray = products.content.filter((p) => p.productId != productId)
+    setProducts({
+      ...products,
+      content: newArray
+    })
+  }
+
   const productsView = () => {
     return (
       <Card className="shadow-sm">
@@ -56,7 +64,7 @@ const ViewProducts = () => {
           <tbody>
              {
               products.content.map((product, index) => (
-                <SingleProductView key={index} index={index} product={product}/>
+                <SingleProductView key={index} index={index} product={product} updateProductList={updateProductList}/>
               ))
              }
           </tbody>

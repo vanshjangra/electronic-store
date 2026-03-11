@@ -18,3 +18,7 @@ export const getAllProducts = (pageNumber = 0, pageSize = 10, sortBy = 'addedDat
     return privateAxios.get(`/products?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`)
     .then((response) => response.data);
 };
+
+export const deleteProduct = (productId) => {
+    return privateAxios.delete(`/products/${productId}`).then((response) => response.data);
+};
