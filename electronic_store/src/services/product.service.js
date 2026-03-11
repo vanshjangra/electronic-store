@@ -13,3 +13,8 @@ export const addProductImage = (file, productId) => {
     formData.append("productImage", file);
     return privateAxios.post(`/products/image/${productId}`, formData).then((response) => response.data);
 };
+
+export const getAllProducts = (pageNumber = 0, pageSize = 10, sortBy = 'addedDate', sortDir = 'asc') => {
+    return privateAxios.get(`/products?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`)
+    .then((response) => response.data);
+};

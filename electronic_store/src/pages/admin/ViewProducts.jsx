@@ -1,12 +1,33 @@
-import { Button, Card, Col, Container, Form, Pagination, Row, Table } from "react-bootstrap"
+import { useEffect, useState } from "react"
+import { Card, Col, Container, Form, Pagination, Row, Table } from "react-bootstrap"
+import { getAllProducts } from "../../services/product.service"
+import { toast } from "react-toastify"
+import SingleProductView from "../../components/admin/SingleProductView"
 
 const ViewProducts = () => {
-  return (
-    <>
-     <Container fluid>
-      <Row>
-        <Col>
-        <Card className="shadow-sm">
+  const [products, setProducts] = useState(undefined)
+
+  useEffect(() => {
+    getProducts(0, 10, 'addedDate', 'desc')
+  }, [])
+
+  const getProducts = (pageNumber = 0, pageSize = 10, sortBy = 'addedDate', sortDir = 'asc') => {
+    getAllProducts(pageNumber, pageSize, sortBy, sortDir)
+    .then(data => {
+      console.log(data)
+      setProducts({
+        ...data
+      })
+    })
+    .catch(error => {
+      console.log(error)
+      toast.error("Error in loading products")
+    })
+  }
+
+  const productsView = () => {
+    return (
+      <Card className="shadow-sm">
           <Card.Body>
           <h5 className="mb-3">View Products</h5>
 
@@ -32,23 +53,11 @@ const ViewProducts = () => {
           </thead> 
 
           <tbody>
-            <tr>
-               <td>#1</td>
-               <td>Iphone 13 Pro Max</td>
-               <td>13</td>
-               <td>52000</td>
-               <td>50000</td>
-               <td>True</td>
-               <td>True</td>
-               <td>Mobile Phones</td>
-               <td>31 June</td>
-
-               <td>
-                <Button variant="danger" size="sm">Delete</Button>
-                <Button className="ms-2" variant="warning" size="sm">View</Button>
-                <Button className="ms-2" variant="dark" size="sm">Update</Button>
-               </td>
-            </tr>
+             {
+              products.content.map((product, index) => (
+                <SingleProductView key={index} index={index} product={product}/>
+              ))
+             }
           </tbody>
         </Table>
 
@@ -64,7 +73,18 @@ const ViewProducts = () => {
         </Container>
 
         </Card.Body>
-        </Card>
+      </Card>
+    )
+  }
+
+  return (
+    <>
+     <Container fluid>
+      <Row>
+        <Col>
+         {
+          products ? productsView() : ""
+         }
         </Col>
       </Row>
      </Container>
