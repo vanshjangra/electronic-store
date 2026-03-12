@@ -3,8 +3,9 @@ import { Card, Col, Container, Form, Pagination, Row, Table } from "react-bootst
 import { getAllProducts } from "../../services/product.service"
 import { toast } from "react-toastify"
 import SingleProductView from "../../components/admin/SingleProductView"
-import { PRODUCT_PAGE_SIZE } from "../../services/helper.service"
+import { getProductImageUrl, PRODUCT_PAGE_SIZE } from "../../services/helper.service"
 import { Button, Modal } from "react-bootstrap"
+import defaultImage from '../../assets/default_profile.jpg'
 
 const ViewProducts = () => {
   const [products, setProducts] = useState(undefined)
@@ -49,13 +50,75 @@ const ViewProducts = () => {
   }
 
   const viewProductModalView = () => {
-    return (
+    return currentProduct && (
     <>
-      <Modal animation={false} size="lg" show={show} onHide={closeProductViewModal}>
+      <Modal animation={false} size={"xl"} show={show} onHide={closeProductViewModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>{currentProduct.title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+
+        <Card className="shadow-sm">
+        <Card.Body>
+        <Container className="text-center py-3">
+          <img src={currentProduct.productImageName ? getProductImageUrl(currentProduct.productId) : defaultImage} alt="" style={{
+            height: '300px'
+          }} />
+        </Container>
+
+        <Table striped bordered responsive className="text-center">
+          <thead>
+            <tr>
+              <th>Info</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Product Id</td>
+              <td>{currentProduct.productId}</td>
+            </tr>
+
+            <tr>
+              <td>Quantity</td>
+              <td>{currentProduct.quantity}</td>
+            </tr>
+
+            <tr>
+              <td>Price</td>
+              <td>{currentProduct.price}</td>
+            </tr>
+
+            <tr>
+              <td>Discounted Price</td>
+              <td>{currentProduct.discountedPrice}</td>
+            </tr>
+
+            <tr>
+              <td>Live</td>
+              <td>{currentProduct.live ? 'True' : 'False'}</td>
+            </tr>
+
+            <tr>
+              <td>Stock</td>
+              <td>{currentProduct.stock ? 'In Stock' : 'Not In Stock'}</td>
+            </tr>
+
+            <tr>
+              <td>Catgory</td>
+              <td>{currentProduct.category?.title}</td>
+            </tr>
+          </tbody>
+        </Table>
+
+        <div className="p-3 border border-1" dangerouslySetInnerHTML={{__html: currentProduct.description}}>
+          
+        </div>
+        </Card.Body>
+        </Card>
+        
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeProductViewModal}>
             Close
