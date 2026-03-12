@@ -9,7 +9,8 @@ import { deleteProduct } from "../../services/product.service"
 const SingleProductView = ({
     index,
     product,
-    updateProductList
+    updateProductList,
+    openProductViewModal
 }) => {
 
   const formatDate = (time) => {
@@ -75,7 +76,7 @@ const SingleProductView = ({
           <MdDelete/>
         </Button>
 
-        <Button className="ms-2" variant="warning" size="sm">
+        <Button className="ms-2" variant="warning" size="sm" onClick={(event) => openProductViewModal(event, product)}>
           <GrFormView/>
         </Button>
 

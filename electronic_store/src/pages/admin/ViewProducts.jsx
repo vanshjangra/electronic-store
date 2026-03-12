@@ -4,9 +4,23 @@ import { getAllProducts } from "../../services/product.service"
 import { toast } from "react-toastify"
 import SingleProductView from "../../components/admin/SingleProductView"
 import { PRODUCT_PAGE_SIZE } from "../../services/helper.service"
+import { Button, Modal } from "react-bootstrap"
 
 const ViewProducts = () => {
   const [products, setProducts] = useState(undefined)
+  const [currentProduct, setCurrentProduct] = useState(undefined)
+
+  const [show, setShow] = useState(false);
+  
+  const closeProductViewModal = () => {
+    setShow(false);
+  };
+
+  const openProductViewModal = (event, product) => {
+    console.log(product)
+    setCurrentProduct(product)
+    setShow(true);
+  };
 
   useEffect(() => {
     getProducts(0, PRODUCT_PAGE_SIZE, 'addedDate', 'desc')
@@ -32,6 +46,27 @@ const ViewProducts = () => {
       ...products,
       content: newArray
     })
+  }
+
+  const viewProductModalView = () => {
+    return (
+    <>
+      <Modal animation={false} size="lg" show={show} onHide={closeProductViewModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeProductViewModal}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={closeProductViewModal}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+    )
   }
 
   const productsView = () => {
@@ -64,7 +99,8 @@ const ViewProducts = () => {
           <tbody>
              {
               products.content.map((product, index) => (
-                <SingleProductView key={index} index={index} product={product} updateProductList={updateProductList}/>
+                <SingleProductView key={index} index={index} product={product} updateProductList={updateProductList}
+                                   openProductViewModal={openProductViewModal}/>
               ))
              }
           </tbody>
@@ -117,6 +153,10 @@ const ViewProducts = () => {
         </Col>
       </Row>
      </Container>
+
+     {
+      viewProductModalView()
+     }
     </>
   )
 }
