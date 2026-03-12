@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Card, Col, Container, Form, Pagination, Row, Table, FormGroup, InputGroup } from "react-bootstrap"
-import { addProductImage, getAllProducts, updateProduct } from "../../services/product.service"
+import { addProductImage, getAllProducts, updateProduct, updateProductCategory } from "../../services/product.service"
 import { toast } from "react-toastify"
 import SingleProductView from "../../components/admin/SingleProductView"
 import { getProductImageUrl, PRODUCT_PAGE_SIZE } from "../../services/helper.service"
@@ -115,6 +115,37 @@ const ViewProducts = () => {
           position: "top-right"
         })
       })
+      }
+
+      if(categoryChangeId === 'none' || categoryChangeId === currentProduct.category?.categoryId){
+
+      }
+      else{
+        updateProductCategory(categoryChangeId, currentProduct.productId)
+        .then(catData => {
+          toast.success("Category updated", {
+            position: "top-right"
+          })
+          setCurrentProduct({
+            ...currentProduct,
+            category: catData.category
+          })
+
+          const newArray = products.content.map(p => {
+          if(p.productId === currentProduct.productId)
+          return catData
+
+          return p
+          })
+
+          setProducts({
+          ...products,
+          content: newArray
+          })
+        })
+        .catch(error => {
+          console.log(error)
+        })
       }
 
       const newArray = products.content.map(p => {
@@ -368,11 +399,13 @@ const ViewProducts = () => {
 
             </Form.Group>
 
-            {/* {JSON.stringify(selectedCategoryId)} */}
+            {/* {JSON.stringify(categoryChangeId)} */}
 
             <Form.Group className="mt-3">
               <Form.Label>Select Category</Form.Label>
-              <Form.Select>
+              <Form.Select onChange={(event) => {
+                setCategoryChangeId(event.target.value)
+              }}>
                 <option value="none">None</option>
 
                 {
