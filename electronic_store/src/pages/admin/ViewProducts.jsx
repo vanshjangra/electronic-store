@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Card, Col, Container, Form, Pagination, Row, Table, FormGroup, InputGroup } from "react-bootstrap"
-import { getAllProducts, updateProduct } from "../../services/product.service"
+import { addProductImage, getAllProducts, updateProduct } from "../../services/product.service"
 import { toast } from "react-toastify"
 import SingleProductView from "../../components/admin/SingleProductView"
 import { getProductImageUrl, PRODUCT_PAGE_SIZE } from "../../services/helper.service"
@@ -17,6 +17,13 @@ const ViewProducts = () => {
   const editorRef = useRef()
 
   const [categories, setCategories] = useState(undefined)
+
+  const [imageUpdate, setImageUpdate] = useState({
+    image: undefined,
+    imagePreview: undefined
+  })
+
+  const [categoryChangeId, setCategoryChangeId] = useState('')
 
   useEffect(() => {
     getCategories(0, 1000)
@@ -81,6 +88,35 @@ const ViewProducts = () => {
     updateProduct(currentProduct, currentProduct.productId)
     .then(data => {
       console.log(data)
+
+      toast.success("Detail updated", {
+        position: "top-right"
+      })
+
+      if(imageUpdate.image && imageUpdate.imagePreview){
+      addProductImage(imageUpdate.image, currentProduct.productId)
+      .then(imageData => {
+        console.log(imageData)
+        setCurrentProduct({
+          ...currentProduct,
+          productImageName: imageData.imageName
+        })
+        toast.success("Image updated", {
+          position: "top-right"
+        })
+        setImageUpdate({
+          image: undefined,
+          imagePreview: undefined
+        })
+      })
+      .catch(error => {
+        console.log(error)
+        toast.error("Error in updating image", {
+          position: "top-right"
+        })
+      })
+      }
+
       const newArray = products.content.map(p => {
         if(p.productId === currentProduct.productId)
           return data
@@ -93,6 +129,28 @@ const ViewProducts = () => {
         content: newArray
       })
     })
+  }
+
+  const handleFileChange = (event) => {
+    if(event.target.files[0].type === 'image/png' || event.target.files[0].type == 'image/jpeg'){
+      const reader = new FileReader()
+
+      reader.onload = (r) => {
+        setImageUpdate({
+          imagePreview: r.target.result,
+          image: event.target.files[0]
+        })
+      }
+
+      reader.readAsDataURL(event.target.files[0])
+    }
+    else{
+      toast.error("Invalid File!")
+        setImageUpdate({
+          image: undefined,
+          imagePreview: undefined
+        })
+    }
   }
 
   const updateProductList = (productId) => {
@@ -293,14 +351,19 @@ const ViewProducts = () => {
                 <img className="img-fluid" alt=""
                      style={{
                       maxHeight: "250px"
-                     }} src={getProductImageUrl(currentProduct.productId)}/>
+                     }} src={imageUpdate.imagePreview ? imageUpdate.imagePreview : getProductImageUrl(currentProduct.productId)}/>
               </Container>
 
               <Form.Label>Select product image</Form.Label>
 
             <InputGroup>
-              <Form.Control type={'file'}/>
-                <Button variant="outline-secondary">Clear</Button>
+              <Form.Control type={'file'} onChange={(event) => handleFileChange(event)}/>
+                <Button onClick={event => {
+                  setImageUpdate({
+                    imagePreview: undefined,
+                    image: undefined
+                  })
+                }} variant="outline-secondary">Clear</Button>
             </InputGroup>
 
             </Form.Group>
