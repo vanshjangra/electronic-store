@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { Card, Col, Container, Form, Pagination, Row, Table } from "react-bootstrap"
+import { useEffect, useRef, useState } from "react"
+import { Card, Col, Container, Form, Pagination, Row, Table, FormGroup, InputGroup } from "react-bootstrap"
 import { getAllProducts } from "../../services/product.service"
 import { toast } from "react-toastify"
 import SingleProductView from "../../components/admin/SingleProductView"
@@ -7,10 +7,27 @@ import { getProductImageUrl, PRODUCT_PAGE_SIZE } from "../../services/helper.ser
 import { Button, Modal } from "react-bootstrap"
 import defaultImage from '../../assets/default_profile.jpg'
 import ShowHtml from "../../components/ShowHtml"
+import {Editor} from "@tinymce/tinymce-react"
+import { getCategories } from "../../services/CategoryService"
 
 const ViewProducts = () => {
   const [products, setProducts] = useState(undefined)
   const [currentProduct, setCurrentProduct] = useState(undefined)
+
+  const editorRef = useRef()
+
+  const [categories, setCategories] = useState(undefined)
+
+  useEffect(() => {
+    getCategories(0, 1000)
+    .then(data => {
+      setCategories({...data})
+      console.log(data)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }, [])
 
   const [show, setShow] = useState(false);
   
@@ -145,13 +162,119 @@ const ViewProducts = () => {
   }
 
   const editProductModalView = () => {
-    return (
+    return currentProduct && (
     <>
       <Modal animation={false} size="xl" show={showEditModal} onHide={closeEditProductModel}>
         <Modal.Header closeButton>
           <Modal.Title>Modal heading</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+
+        <Form>
+            <FormGroup className="mt-2">
+              <Form.Label>Product title</Form.Label>
+              <Form.Control type="text" placeholder="Enter here" value={currentProduct.title}/>
+            </FormGroup>
+
+            <Form.Group className="mt-3">
+              <Form.Label>Product Description</Form.Label>
+              {/* <Form.Control as={'textarea'} placeholder="Enter here" rows={6} value={product.description}
+                            onChange={(event) => setProduct({
+                              ...product,
+                              description: event.target.value
+                            })}/> */}
+
+              <Editor apiKey="" onInit={(evt, editor) => editorRef.current = editor}
+                      init={{
+                            height: 380,
+                            menubar: true,
+                            plugins: [
+                              'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                              'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                              'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                            ],
+                            toolbar: 'undo redo | blocks | ' +
+                              'bold italic forecolor | alignleft aligncenter ' +
+                              'alignright alignjustify | bullist numlist outdent indent | ' +
+                              'removeformat | help',
+                            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                            }} value={currentProduct.description}/>
+            </Form.Group>
+
+            <Row>
+              <Col>
+              <FormGroup className="mt-3">
+              <Form.Label>Price</Form.Label>
+              <Form.Control type="number" placeholder="Enter here" value={currentProduct.price}/>
+             </FormGroup>
+              </Col>
+
+              <Col>
+              <FormGroup className="mt-3">
+              <Form.Label>Discounted Price</Form.Label>
+              <Form.Control type="number" placeholder="Enter here" value={currentProduct.discountedPrice}/>
+              </FormGroup>
+              </Col>
+            </Row>
+
+            <FormGroup className="mt-3">
+              <Form.Label>Product Quantity</Form.Label>
+              <Form.Control type="number" placeholder="Enter here" value={currentProduct.quantity}/>
+            </FormGroup>     
+
+            <Row className="mt-3 px-1">
+              <Col>
+              <Form.Check type="switch" label={"Live"} checked={currentProduct.live}/>
+              </Col>
+
+              <Col>
+              <Form.Check type="switch" label={"Stock"} checked={currentProduct.stock}/>
+              </Col>
+            </Row>
+
+            <Form.Group className="my-5">
+              <Container className="text-center py-4 border border-2">
+                <p className="text-muted">Image Preview</p>
+                <img className="img-fluid" alt=""
+                     style={{
+                      maxHeight: "250px"
+                     }} src={getProductImageUrl(currentProduct.productId)}/>
+              </Container>
+
+              <Form.Label>Select product image</Form.Label>
+
+            <InputGroup>
+              <Form.Control type={'file'}/>
+                <Button variant="outline-secondary">Clear</Button>
+            </InputGroup>
+
+            </Form.Group>
+
+            {/* {JSON.stringify(selectedCategoryId)} */}
+
+            <Form.Group className="mt-3">
+              <Form.Label>Select Category</Form.Label>
+              <Form.Select>
+                <option value="none">None</option>
+
+                {
+                  categories && categories.content.map(cat => {
+                    return (
+                      <option selected={cat.categoryId == currentProduct.category?.categoryId} 
+                              value={cat.categoryId} key={cat.categoryId}>{cat.title}</option>
+                    )
+                  })
+                }
+              </Form.Select>
+            </Form.Group>
+
+            <Container className="text-center mt-3">
+              <Button type="submit" variant="success" size="sm">Add Product</Button>
+              <Button variant="danger" className="ms-1" size="sm">Clear Data</Button>
+            </Container>
+          </Form>
+
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeEditProductModel}>
             Close
