@@ -6,6 +6,7 @@ import SingleProductView from "../../components/admin/SingleProductView"
 import { getProductImageUrl, PRODUCT_PAGE_SIZE } from "../../services/helper.service"
 import { Button, Modal } from "react-bootstrap"
 import defaultImage from '../../assets/default_profile.jpg'
+import ShowHtml from "../../components/ShowHtml"
 
 const ViewProducts = () => {
   const [products, setProducts] = useState(undefined)
@@ -112,8 +113,8 @@ const ViewProducts = () => {
           </tbody>
         </Table>
 
-        <div className="p-3 border border-1" dangerouslySetInnerHTML={{__html: currentProduct.description}}>
-          
+        <div className="p-3 border border-1">
+          <ShowHtml htmlText={currentProduct.description}/>
         </div>
         </Card.Body>
         </Card>
