@@ -24,6 +24,17 @@ const ViewProducts = () => {
     setShow(true);
   };
 
+  const [showEditModal, setShowEditModal] = useState(false)
+
+  const closeEditProductModel = (event, product) => {
+    setShowEditModal(false)
+  }
+
+  const openEditProductModel = (event, product) => {
+    setCurrentProduct(product)
+    setShowEditModal(true)
+  }
+
   useEffect(() => {
     getProducts(0, PRODUCT_PAGE_SIZE, 'addedDate', 'desc')
   }, [])
@@ -133,6 +144,27 @@ const ViewProducts = () => {
     )
   }
 
+  const editProductModalView = () => {
+    return (
+    <>
+      <Modal animation={false} size="xl" show={showEditModal} onHide={closeEditProductModel}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeEditProductModel}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={closeEditProductModel}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+    )
+  }
+
   const productsView = () => {
     return (
       <Card className="shadow-sm">
@@ -164,7 +196,7 @@ const ViewProducts = () => {
              {
               products.content.map((product, index) => (
                 <SingleProductView key={index} index={index} product={product} updateProductList={updateProductList}
-                                   openProductViewModal={openProductViewModal}/>
+                                   openProductViewModal={openProductViewModal} openEditProductModel={openEditProductModel}/>
               ))
              }
           </tbody>
@@ -220,6 +252,10 @@ const ViewProducts = () => {
 
      {
       viewProductModalView()
+     }
+
+     {
+      editProductModalView()
      }
     </>
   )

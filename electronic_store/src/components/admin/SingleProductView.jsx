@@ -10,7 +10,8 @@ const SingleProductView = ({
     index,
     product,
     updateProductList,
-    openProductViewModal
+    openProductViewModal,
+    openEditProductModel
 }) => {
 
   const formatDate = (time) => {
@@ -80,7 +81,7 @@ const SingleProductView = ({
           <GrFormView/>
         </Button>
 
-        <Button className="ms-2" variant="dark" size="sm">
+        <Button className="ms-2" variant="dark" size="sm" onClick={(event) => openEditProductModel(event, product)}>
           <BsFillPencilFill/>
         </Button>
       </td>  
