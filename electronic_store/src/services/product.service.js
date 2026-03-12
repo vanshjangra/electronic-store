@@ -22,3 +22,7 @@ export const getAllProducts = (pageNumber = 0, pageSize = 10, sortBy = 'addedDat
 export const deleteProduct = (productId) => {
     return privateAxios.delete(`/products/${productId}`).then((response) => response.data);
 };
+
+export const updateProduct = (product, productId) => {
+    return privateAxios.put(`/products/${productId}`, product).then((response) => response.data);
+};

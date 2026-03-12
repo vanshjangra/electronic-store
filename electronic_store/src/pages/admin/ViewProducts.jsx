@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Card, Col, Container, Form, Pagination, Row, Table, FormGroup, InputGroup } from "react-bootstrap"
-import { getAllProducts } from "../../services/product.service"
+import { getAllProducts, updateProduct } from "../../services/product.service"
 import { toast } from "react-toastify"
 import SingleProductView from "../../components/admin/SingleProductView"
 import { getProductImageUrl, PRODUCT_PAGE_SIZE } from "../../services/helper.service"
@@ -67,6 +67,31 @@ const ViewProducts = () => {
     .catch(error => {
       console.log(error)
       toast.error("Error in loading products")
+    })
+  }
+
+  const handleUpdateFormSubmit = (event) => {
+    event.preventDefault()
+    console.log(currentProduct)
+    if(currentProduct.title === ''){
+      toast.error("Title required")
+      return
+    }
+
+    updateProduct(currentProduct, currentProduct.productId)
+    .then(data => {
+      console.log(data)
+      const newArray = products.content.map(p => {
+        if(p.productId === currentProduct.productId)
+          return data
+
+        return p
+      })
+
+      setProducts({
+        ...products,
+        content: newArray
+      })
     })
   }
 
@@ -170,10 +195,16 @@ const ViewProducts = () => {
         </Modal.Header>
         <Modal.Body>
 
-        <Form>
+        {/* {JSON.stringify(currentProduct)} */}
+
+        <Form onSubmit={handleUpdateFormSubmit}>
             <FormGroup className="mt-2">
               <Form.Label>Product title</Form.Label>
-              <Form.Control type="text" placeholder="Enter here" value={currentProduct.title}/>
+              <Form.Control type="text" placeholder="Enter here" value={currentProduct.title}
+                            onChange={(event) => setCurrentProduct({
+                              ...currentProduct,
+                              title: event.target.value
+                            })}/>
             </FormGroup>
 
             <Form.Group className="mt-3">
@@ -198,37 +229,61 @@ const ViewProducts = () => {
                               'alignright alignjustify | bullist numlist outdent indent | ' +
                               'removeformat | help',
                             content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                            }} value={currentProduct.description}/>
+                            }} value={currentProduct.description}
+                               onEditorChange={(event) => setCurrentProduct({
+                                ...currentProduct,
+                                description: editorRef.current.getContent()
+                               })}/>
             </Form.Group>
 
             <Row>
               <Col>
               <FormGroup className="mt-3">
               <Form.Label>Price</Form.Label>
-              <Form.Control type="number" placeholder="Enter here" value={currentProduct.price}/>
+              <Form.Control type="number" placeholder="Enter here" value={currentProduct.price}
+                            onChange={(event) => setCurrentProduct({
+                              ...currentProduct,
+                              price: event.target.value
+                            })}/>
              </FormGroup>
               </Col>
 
               <Col>
               <FormGroup className="mt-3">
               <Form.Label>Discounted Price</Form.Label>
-              <Form.Control type="number" placeholder="Enter here" value={currentProduct.discountedPrice}/>
+              <Form.Control type="number" placeholder="Enter here" value={currentProduct.discountedPrice}
+                            onChange={(event) => setCurrentProduct({
+                              ...currentProduct,
+                              discountedPrice: event.target.value
+                            })}/>
               </FormGroup>
               </Col>
             </Row>
 
             <FormGroup className="mt-3">
               <Form.Label>Product Quantity</Form.Label>
-              <Form.Control type="number" placeholder="Enter here" value={currentProduct.quantity}/>
+              <Form.Control type="number" placeholder="Enter here" value={currentProduct.quantity}
+                            onChange={(event) => setCurrentProduct({
+                              ...currentProduct,
+                              quantity: event.target.value
+                            })}/>
             </FormGroup>     
 
             <Row className="mt-3 px-1">
               <Col>
-              <Form.Check type="switch" label={"Live"} checked={currentProduct.live}/>
+              <Form.Check type="switch" label={"Live"} checked={currentProduct.live}
+                          onChange={(event) => setCurrentProduct({
+                              ...currentProduct,
+                              live: !currentProduct.live
+                            })}/>
               </Col>
 
               <Col>
-              <Form.Check type="switch" label={"Stock"} checked={currentProduct.stock}/>
+              <Form.Check type="switch" label={"Stock"} checked={currentProduct.stock}
+                          onChange={(event) => setCurrentProduct({
+                              ...currentProduct,
+                              stock: !currentProduct.stock
+                            })}/>
               </Col>
             </Row>
 
@@ -269,8 +324,7 @@ const ViewProducts = () => {
             </Form.Group>
 
             <Container className="text-center mt-3">
-              <Button type="submit" variant="success" size="sm">Add Product</Button>
-              <Button variant="danger" className="ms-1" size="sm">Clear Data</Button>
+              <Button type="submit" variant="success" size="sm">Save Details</Button>
             </Container>
           </Form>
 
@@ -278,9 +332,6 @@ const ViewProducts = () => {
         <Modal.Footer>
           <Button variant="secondary" onClick={closeEditProductModel}>
             Close
-          </Button>
-          <Button variant="primary" onClick={closeEditProductModel}>
-            Save Changes
           </Button>
         </Modal.Footer>
       </Modal>
