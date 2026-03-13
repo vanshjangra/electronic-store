@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Card, Col, Container, Form, Pagination, Row, Table, FormGroup, InputGroup } from "react-bootstrap"
-import { addProductImage, getAllProducts, updateProduct, updateProductCategory } from "../../services/product.service"
+import { addProductImage, getAllProducts, searchProduct, updateProduct, updateProductCategory } from "../../services/product.service"
 import { toast } from "react-toastify"
 import SingleProductView from "../../components/admin/SingleProductView"
 import { getProductImageUrl, PRODUCT_PAGE_SIZE } from "../../services/helper.service"
@@ -11,6 +11,8 @@ import {Editor} from "@tinymce/tinymce-react"
 import { getCategories } from "../../services/CategoryService"
 
 const ViewProducts = () => {
+  const [previousProducts, setPreviousProducts] = useState(undefined)
+
   const [products, setProducts] = useState(undefined)
   const [currentProduct, setCurrentProduct] = useState(undefined)
 
@@ -24,6 +26,8 @@ const ViewProducts = () => {
   })
 
   const [categoryChangeId, setCategoryChangeId] = useState('')
+
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     getCategories(0, 1000)
@@ -435,6 +439,28 @@ const ViewProducts = () => {
     )
   }
 
+  const searchProducts = () => {
+    if(searchQuery === undefined || searchQuery.trim() === ''){
+      return
+    }
+    
+    searchProduct(searchQuery)
+    .then(data => {
+      if(data.content.length <= 0){
+        toast.info("No result found")
+        return
+      }
+      setPreviousProducts(products)
+      setProducts(data)
+    })
+    .catch(error => {
+      console.log(error)
+      toast.error("Error in searching products", {
+        position: "top-right"
+      })
+    })
+  }
+
   const productsView = () => {
     return (
       <Card className="shadow-sm">
@@ -443,7 +469,19 @@ const ViewProducts = () => {
 
           <Form.Group className="mb-2">
             <Form.Label>Search Product</Form.Label>
-            <Form.Control type="text" placeholder="Search here"/>
+            
+            <InputGroup>
+             <Form.Control type="text" placeholder="Search here" value={searchQuery}
+                           onChange={(event) => {
+                            if(event.target.value === ''){
+                              if(previousProducts){
+                                setProducts(previousProducts)
+                              }
+                            }
+                                setSearchQuery(event.target.value)
+                           }}/>
+             <Button onClick={searchProducts} variant="outline-secondary">Search</Button>
+            </InputGroup>
           </Form.Group>
 
           <Table className="text-center" bordered striped hover responsive size="sm">
