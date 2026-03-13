@@ -1,16 +1,19 @@
 import { Button, Card, Col, Container, Row, Table } from "react-bootstrap"
+import { formatDate } from "../services/helper.service"
 
-const SingleOrderView = () => {
+const SingleOrderView = ({
+    order
+}) => {
   return (
     <Card className="border border-0 shadow-sm mb-5">
         <Card.Body>
             <Row>
                 <Col>
-                <b>Order Id: </b>sdwvetrtgercfwtv
+                <b>Order Id: </b>{order.orderId}
                 </Col>
 
                 <Col>
-                <b>Billing Name: </b>Vansh Jangra
+                <b>Billing Name: </b>{order.billingName}
                 </Col>
             </Row>
 
@@ -20,27 +23,27 @@ const SingleOrderView = () => {
                  <tbody>
                     <tr>
                         <td>Billing Phone</td>
-                        <td>79415645615</td>
+                        <td className="fw-bold">{order.billingPhone}</td>
                     </tr>
 
                     <tr>
                         <td>Items</td>
-                        <td>10</td>
+                        <td className="fw-bold">{order.orderItems.length}</td>
                     </tr>
 
-                    <tr>
+                    <tr className={order.paymentStatus === 'NOTPAID' ? 'table-danger' : 'table-success'}>
                         <td>Payment Status</td>
-                        <td>PAID</td>
+                        <td className="fw-bold">{order.paymentStatus}</td>
                     </tr>
 
                     <tr>
                         <td>Order Status</td>
-                        <td>PENDING</td>
+                        <td className="fw-bold">{order.orderStatus}</td>
                     </tr>
 
                     <tr>
                         <td>Ordered Date</td>
-                        <td>13 March 2026</td>
+                        <td className="fw-bold">{formatDate(order.orderedDate)}</td>
                     </tr>
                 </tbody>   
                 </Table>

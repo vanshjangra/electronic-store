@@ -33,9 +33,9 @@ const AdminOrders = () => {
         <Card.Body>
           <h3 className="my-4 mx-2">All orders is here</h3>
           {
-            fakeOrders.map(o => {
+            ordersData.content.map(o => {
               return (
-                <SingleOrderView/>
+                <SingleOrderView order={o}/>
               )
             })
           }
@@ -49,7 +49,7 @@ const AdminOrders = () => {
     <Container>
       <Row>
         <Col>
-        {ordersView()}
+        {ordersData && ordersView()}
         </Col>
       </Row>
     </Container>
