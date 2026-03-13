@@ -4,11 +4,14 @@ import { ADMIN_ORDER_PAGE_SIZE, getProductImageUrl } from "../../services/helper
 import { Card, Col, Container, Row, Modal, Button, Table, ListGroup, Badge } from "react-bootstrap"
 import SingleOrderView from "../../components/SingleOrderView"
 import { formatDate } from "../../services/helper.service"
+import InfiniteScroll from "react-infinite-scroll-component"
 
 const AdminOrders = () => {
   const [ordersData, setOrdersData] = useState(undefined)
 
   const [selectedOrder, setSelectedOrder] = useState(undefined)
+
+  const [currentPage, setCurrentPage] = useState(0)
 
   // const [fakeOrders, setFakeOrders] = useState([
   //   1, 2, 3, 4, 5, 6, 7, 8, 9, 10
@@ -31,16 +34,40 @@ const AdminOrders = () => {
     getOrdersLocally();
   }, [])
 
+  useEffect(() => {
+    if(currentPage > 0){
+      getOrdersLocally()
+    }
+  }, [currentPage])
+
   const getOrdersLocally = async () => {
     try {
-      const data = await getAllOrders(0, ADMIN_ORDER_PAGE_SIZE, 'orderedDate', 'desc');
+      const data = await getAllOrders(currentPage, ADMIN_ORDER_PAGE_SIZE, 'orderedDate', 'desc');
       console.log(data)
-      setOrdersData(data) 
+
+      if(currentPage == 0){
+        setOrdersData(data)
+      }
+      else{
+        setOrdersData({
+          content: [...ordersData.content, ...data.content],
+          lastPage: data.lastPage,
+          pageNumber: data.pageNumber,
+          pageSize: data.pageSize,
+          totalElements: data.totalElements,
+          totalPages: data.totalPages
+        })
+      } 
     }
     catch (e) {
       console.log("Error")
       console.log(e)
     }
+  }
+
+  const loadNextPage = () => {
+    console.log("Loading next page")
+    setCurrentPage(currentPage + 1)
   }
 
   const viewOrderModal = () => {
@@ -160,14 +187,18 @@ const AdminOrders = () => {
       <Card className="shadow-sm">
         <Card.Body>
           <h3 className="my-4 mx-2">All orders is here</h3>
-          {
+          <InfiniteScroll dataLength={ordersData.content.length} next={loadNextPage}
+                          hasMore={!ordersData.lastPage} loader={<h3 className="text-center my-4">Loading...</h3>}
+                          endMessage={<p className="my-3 text-center">All orders loaded</p>}>
+            {
             ordersData.content.map(o => {
               return (
                 <SingleOrderView key={o.orderId} order={o} 
                                  openViewOrderModal={openViewOrderModal}/>
               )
             })
-          }
+            }
+          </InfiniteScroll>
         </Card.Body>
       </Card>
     )
