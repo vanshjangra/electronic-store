@@ -2,7 +2,8 @@ import { Button, Card, Col, Container, Row, Table } from "react-bootstrap"
 import { formatDate } from "../services/helper.service"
 
 const SingleOrderView = ({
-    order
+    order,
+    openViewOrderModal
 }) => {
   return (
     <Card className="border border-0 shadow-sm mb-5">
@@ -51,7 +52,9 @@ const SingleOrderView = ({
             </Row>
 
             <Container className="text-center">
-                <Button size="sm" variant="info">View Order Details</Button>
+                <Button onClick={(event) => {
+                    openViewOrderModal(event, order)
+                }} size="sm" variant="info">View Order Details</Button>
             </Container>
         </Card.Body>
     </Card>
