@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import { getAllOrders } from "../../services/OrderService"
 import { ADMIN_ORDER_PAGE_SIZE, getProductImageUrl } from "../../services/helper.service"
-import { Card, Col, Container, Row, Modal, Button, Table, ListGroup, Badge } from "react-bootstrap"
+import { Card, Col, Container, Row, Modal, Button, Table, ListGroup, Badge, Form } from "react-bootstrap"
 import SingleOrderView from "../../components/SingleOrderView"
 import { formatDate } from "../../services/helper.service"
 import InfiniteScroll from "react-infinite-scroll-component"
+import { toast } from "react-toastify"
 
 const AdminOrders = () => {
   const [ordersData, setOrdersData] = useState(undefined)
@@ -22,12 +23,23 @@ const AdminOrders = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const [updateShow, setUpdateShow] = useState(false);
+
+  const handleUpdateClose = () => setUpdateShow(false);
+  const handleUpdateShow = () => setUpdateShow(true);
+
   const openViewOrderModal = (event, order) => {
     console.log("View order button clicked")
     console.log(event)
     console.log(order)
     setSelectedOrder({...order})
     handleShow(true)
+  }
+
+  const openEditOrderModal = (event, order) => {
+    console.log("Hi open edit modal")
+    setSelectedOrder({...order})
+    handleUpdateShow(true)
   }
 
   useEffect(() => {
@@ -182,6 +194,98 @@ const AdminOrders = () => {
   );
   }
 
+  const updateOrderModal = () => {
+    return selectedOrder && (
+     <>
+      <Modal animation={false} size={"lg"} show={updateShow} onHide={handleUpdateClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Update Order</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+        <Form>
+          <Form.Group>
+            <Form.Label>Billing Name</Form.Label>
+            <Form.Control type="text" value={selectedOrder.billingName}
+                          onChange={(event) => {
+                            setSelectedOrder({
+                              ...selectedOrder,
+                              billingName: event.target.value
+                            })
+                          }}/>
+          </Form.Group>
+
+          <Form.Group className="mt-3">
+            <Form.Label>Billing Phone</Form.Label>
+            <Form.Control type="text" value={selectedOrder.billingPhone}
+                          onChange={(event) => {
+                            setSelectedOrder({
+                              ...selectedOrder,
+                              billingPhone: event.target.value
+                            })
+                          }}/>
+          </Form.Group>
+
+          <Form.Group className="mt-3">
+            <Form.Label>Billing Address</Form.Label>
+            <Form.Control as={'textarea'} type="text" rows={5} value={selectedOrder.billingAddress}
+                          onChange={(event) => {
+                            setSelectedOrder({
+                              ...selectedOrder,
+                              billingAddress: event.target.value
+                            })
+                          }}/>
+          </Form.Group>
+
+          <Form.Group className="mt-3">
+            <Form.Label>Payment Status</Form.Label>
+            <Form.Select onChange={(event) => {
+              setSelectedOrder({
+                ...selectedOrder,
+                paymentStatus: event.target.value
+              })
+            }}>
+              <option selected={selectedOrder.paymentStatus === 'NOTPAID'} value="NOTPAID">NOT PAID</option>
+              <option selected={selectedOrder.paymentStatus === 'PAID'} value="PAID">PAID</option>
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mt-3">
+            <Form.Label>Order Status</Form.Label>
+            <Form.Select onChange={(event) => {
+              setSelectedOrder({
+                ...selectedOrder,
+                orderStatus: event.target.value
+              })
+            }}>
+              <option value="PENDING">PENDING</option>
+              <option value="DISPATCHED">DISPATCHED</option>
+              <option value="ONWAY">ONWAY</option>
+              <option value="DELIVERED">DELIVERED</option>
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group className="mt-3">
+            <Form.Label>Select Date</Form.Label>
+            <Form.Control type="text"/>
+            <p className="text-muted">Format : DD/MM/YYYY</p>
+          </Form.Group>
+        </Form>
+
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleUpdateClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleUpdateClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+     </>
+    )
+  }
+
   const ordersView = () => {
     return (
       <Card className="shadow-sm">
@@ -194,7 +298,8 @@ const AdminOrders = () => {
             ordersData.content.map(o => {
               return (
                 <SingleOrderView key={o.orderId} order={o} 
-                                 openViewOrderModal={openViewOrderModal}/>
+                                 openViewOrderModal={openViewOrderModal}
+                                 openEditOrderModal={openEditOrderModal}/>
               )
             })
             }
@@ -212,6 +317,8 @@ const AdminOrders = () => {
         {ordersData && ordersView()}
 
         {viewOrderModal()}
+
+        {updateOrderModal()}
         </Col>
       </Row>
     </Container>
