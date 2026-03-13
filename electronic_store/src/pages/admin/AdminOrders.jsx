@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getAllOrders } from "../../services/OrderService"
+import { getAllOrders, updateOrder } from "../../services/OrderService"
 import { ADMIN_ORDER_PAGE_SIZE, getProductImageUrl } from "../../services/helper.service"
 import { Card, Col, Container, Row, Modal, Button, Table, ListGroup, Badge, Form } from "react-bootstrap"
 import SingleOrderView from "../../components/SingleOrderView"
@@ -194,6 +194,27 @@ const AdminOrders = () => {
   );
   }
 
+  const handleOrderUpdate = async (event) => {
+    event.preventDefault()
+    console.log(selectedOrder)
+
+    if(selectedOrder.billingName.trim() === ''){
+      toast.error("Name required!")
+      return;
+    }
+
+    try {
+      const data = await updateOrder(selectedOrder, selectedOrder.orderId)
+      toast.success("Order details udpated", {
+        position: "top-right"
+      })
+    } 
+    catch (error) {
+      console.log(error)
+      toast.error("ORder not updated")
+    }
+  }
+
   const updateOrderModal = () => {
     return selectedOrder && (
      <>
@@ -203,7 +224,7 @@ const AdminOrders = () => {
         </Modal.Header>
         <Modal.Body>
 
-        <Form>
+        <Form onSubmit={handleOrderUpdate}>
           <Form.Group>
             <Form.Label>Billing Name</Form.Label>
             <Form.Control type="text" value={selectedOrder.billingName}
@@ -270,15 +291,18 @@ const AdminOrders = () => {
             <Form.Control type="text"/>
             <p className="text-muted">Format : DD/MM/YYYY</p>
           </Form.Group>
+
+          <Container className="text-center">
+            <Button type="submit" variant="primary">
+            Save Changes
+            </Button>
+          </Container>
         </Form>
 
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleUpdateClose}>
             Close
-          </Button>
-          <Button variant="primary" onClick={handleUpdateClose}>
-            Save Changes
           </Button>
         </Modal.Footer>
       </Modal>
