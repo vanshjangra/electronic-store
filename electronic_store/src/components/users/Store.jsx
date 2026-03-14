@@ -2,6 +2,9 @@ import { Col, Container, ListGroup, Row } from 'react-bootstrap'
 import { getCategories } from '../../services/CategoryService'
 import { useEffect, useState } from 'react'
 import defaultCategoryImage from '../../assets/default_profile.jpg'
+import { toast } from 'react-toastify'
+import {getAllLive, getAllProducts} from '../../services/product.service'
+import SingleProductCard from './SingleProductCard'
 
 function Store(){
     const [categories, setCategories] = useState(null)
@@ -9,6 +12,7 @@ function Store(){
 
     useEffect(() => {
         loadCategories(0, 100000)
+        loadProducts(0, 9, 'addedDate', 'desc')
     }, [])
 
     const loadCategories = (pageNumber, pageSize) => {
@@ -22,8 +26,16 @@ function Store(){
         })
     }
 
-    const loadProducts = () => {
-
+    const loadProducts = (pageNumber, pageSize, sortBy, sortDir) => {
+        getAllLive(pageNumber, pageSize, sortBy, sortDir)
+        .then(data => {
+            console.log(data)
+            setProducts({...data})
+        })
+        .catch(error => {
+            console.log(error)
+            toast.error("Error in loading products")
+        })
     }
 
     const categoryView = () => {
@@ -63,8 +75,16 @@ function Store(){
     }
 
     const productsView = () => {
-      return (
-        <h1>This is product view</h1>
+      return products && (
+        <Row>
+            {
+                products.content.map(p => (
+                    <Col key={p.productId} md={4}>
+                    <SingleProductCard product={p}/>
+                    </Col>
+                ))
+            }
+        </Row>
       )
     }
 
