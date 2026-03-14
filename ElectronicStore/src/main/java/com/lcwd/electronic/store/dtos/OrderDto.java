@@ -24,4 +24,5 @@ public class OrderDto {
     private Date deliveredDate;
 //    private UserDto userDto;
     private List<OrderItemDto> orderItems = new ArrayList<>();
+    private UserDto user;
 }

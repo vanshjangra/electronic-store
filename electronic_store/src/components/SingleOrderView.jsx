@@ -1,5 +1,6 @@
 import { Button, Card, Col, Container, Row, Table } from "react-bootstrap"
 import { formatDate } from "../services/helper.service"
+import { Link } from "react-router-dom"
 
 const SingleOrderView = ({
     order,
@@ -15,7 +16,7 @@ const SingleOrderView = ({
                 </Col>
 
                 <Col>
-                <b>Billing Name: </b>{order.billingName}
+                <b>Ordered By: </b><Link className="text-muted" to={`/users/profile/${order.user.userId}`}>{order.user.name}</Link>
                 </Col>
             </Row>
 
@@ -23,6 +24,11 @@ const SingleOrderView = ({
                 <Col>
                 <Table bordered striped>
                  <tbody>
+                    <tr>
+                        <td>Billing Name</td>
+                        <td className="fw-bold">{order.billingName}</td>
+                    </tr>
+
                     <tr>
                         <td>Billing Phone</td>
                         <td className="fw-bold">{order.billingPhone}</td>
