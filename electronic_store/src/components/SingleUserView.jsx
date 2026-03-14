@@ -1,6 +1,7 @@
 import { Badge, Card, Col, Row } from "react-bootstrap"
 import { getUserImageUrl } from "../services/helper.service"
 import defaultImage from "../assets/default_profile.jpg"
+import { Link } from "react-router-dom"
 
 const SingleUserView = ({user}) => {
   return (
@@ -8,7 +9,7 @@ const SingleUserView = ({user}) => {
      <Card className="mt-3 border border-0 shadow-sm">
         <Card.Body>
             <Row>
-                <Col md={1}>
+                <Col md={1} className="d-flex align-items-center">
                   <img src={user.imageName ? getUserImageUrl(user.userId) : defaultImage}
                        alt="" className="rounded-circle" style={{
                        width: "80px",
@@ -21,7 +22,7 @@ const SingleUserView = ({user}) => {
                 </Col>
 
                 <Col md={11} className="ps-5">
-                  <h5>{user.name}</h5>
+                  <Link to={'/users/profile/' + user.userId}><h5>{user.name}</h5></Link>
 
                   <p className="text-muted">{user.about}</p>
                   <p className="text-muted">{user.email}</p>
