@@ -208,10 +208,22 @@ const AdminOrders = () => {
       toast.success("Order details udpated", {
         position: "top-right"
       })
+
+      const newList = ordersData.content.map(item => {
+        if(item.orderId === selectedOrder.orderId){
+          return data;
+        }
+        else return item;
+      })
+
+      setOrdersData({
+        ...ordersData,
+        content: newList
+      })
     } 
     catch (error) {
       console.log(error)
-      toast.error("ORder not updated")
+      toast.error("Order not updated")
     }
   }
 
@@ -224,6 +236,8 @@ const AdminOrders = () => {
         </Modal.Header>
         <Modal.Body>
 
+        <Card className="border border-0 shadow-sm">
+          <Card.Body>
         <Form onSubmit={handleOrderUpdate}>
           <Form.Group>
             <Form.Label>Billing Name</Form.Label>
@@ -288,8 +302,13 @@ const AdminOrders = () => {
 
           <Form.Group className="mt-3">
             <Form.Label>Select Date</Form.Label>
-            <Form.Control type="text"/>
-            <p className="text-muted">Format : DD/MM/YYYY</p>
+            <Form.Control type="text" onChange={event => {
+                            setSelectedOrder({
+                              ...selectedOrder,
+                              deliveredDate: event.target.value
+                            })
+                          }}/>
+            <p className="text-muted">Format : YYYY-MM-dd</p>
           </Form.Group>
 
           <Container className="text-center">
@@ -298,6 +317,8 @@ const AdminOrders = () => {
             </Button>
           </Container>
         </Form>
+          </Card.Body>
+        </Card>
 
         </Modal.Body>
         <Modal.Footer>

@@ -9,6 +9,10 @@ export const getProductImageUrl = (productId) => {
 };
 
 export const formatDate = (timeInLongs) => {
+    if(!timeInLongs){
+        return null
+    }
+
     // var options = {
     //     weekday: "long",
     //     year: "numeric",
