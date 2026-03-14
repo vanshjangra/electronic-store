@@ -25,3 +25,8 @@ export const updateUserProfilePicture = (file, userId) => {
     data.append("userImage", file);
     return privateAxios.post(`/users/image/${userId}`, data).then((response) => response.data);
 };
+
+export const getAllUsers = (pageNumber, pageSize, sortBy, sortDir) => {
+    return privateAxios.get(`/users?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`)
+    .then((res) => res.data);
+};
