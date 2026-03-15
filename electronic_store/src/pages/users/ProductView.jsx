@@ -1,12 +1,14 @@
 import { Link, useParams } from "react-router-dom"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { getProduct } from "../../services/product.service"
 import { Badge, Button, Card, Col, Container, Row } from "react-bootstrap"
 import ShowHtml from "../../components/ShowHtml"
 import { getProductImageUrl } from "../../services/helper.service"
 import defaultProductImage from "../../assets//default_product_image.jpg"
+import CartContext from '../../context/CartContext'
 
 function ProductView() {
+  const {cart, addItem} = useContext(CartContext)
   const [product, setProduct] = useState(null)
   const {productId} = useParams()
 
@@ -16,6 +18,10 @@ function ProductView() {
 
   const loadUser = (productId) => {
     getProduct(productId).then(data => setProduct(data)).catch(error => console.log(error))
+  }
+
+  const handleAddItem = (productId, quantity) => {
+    addItem(quantity, productId)
   }
 
   const productView = () => {
@@ -53,6 +59,15 @@ function ProductView() {
                                   <b><span className="h1 text-muted"><s>₹{product.price}</s></span></b>
                                   <b><span className="h2 ms-2">₹{product.discountedPrice}</span></b>
                                 </Container>
+
+                                <Container className="d-grid mt-4">
+                                  <Button variant="warning" size={'sm'} onClick={event => handleAddItem(product.productId, 1)}>
+                                    Add to Cart
+                                  </Button>
+                                  <Button as={Link} to="/store" className="mt-2" variant="info" size={'sm'}>
+                                    Go to Store
+                                  </Button>
+                                </Container>
                                 </Col>
                             </Row>
                         </Container>
@@ -66,8 +81,12 @@ function ProductView() {
             </Row>
 
             <Container className="d-grid mt-4">
-                <Button variant="warning" size={'sm'}>Add to Cart</Button>
-                <Button as={Link} to="/store" className="mt-2" variant="info" size={'sm'}>Go to Store</Button>
+                <Button variant="warning" size={'sm'} onClick={event => handleAddItem(product.productId, 1)}>
+                  Add to Cart
+                </Button>
+                <Button as={Link} to="/store" className="mt-2" variant="info" size={'sm'}>
+                  Go to Store
+                </Button>
             </Container>
         </Container>
     )

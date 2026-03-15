@@ -31,6 +31,9 @@ const CartProvider = ({children}) => {
     try {
      const result = await addItemToCart(userData.user.userId, productId, quantity);
      setCart({...result});
+     toast.success("Item added to cart", {
+      position: "top-right"
+     });
     } 
     catch (error) {
       console.log(error)
