@@ -39,3 +39,7 @@ export const updateProductCategory = (categoryId, productId) => {
 export const searchProduct = (query) => {
     return privateAxios.get(`/products/search/${query}`).then((res) => res.data);
 };
+
+export const getProduct = (productId) => {
+    return privateAxios.get(`/products/${productId}`).then((res) => res.data);
+};

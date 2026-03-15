@@ -2,6 +2,7 @@ import { Badge, Button, Card, Container } from "react-bootstrap"
 import { getProductImageUrl } from "../../services/helper.service"
 import "../users/SingleProductCard.css"
 import defaultProductImage from "../../assets//default_product_image.jpg"
+import { Link } from "react-router-dom"
 
 const SingleProductCard = ({product}) => {
   return (
@@ -31,7 +32,7 @@ const SingleProductCard = ({product}) => {
             </Container>
 
             <Container className="d-grid mt-4">
-                <Button className="" variant="success" size={'sm'}>View Product</Button>
+                <Button as={Link} to={`/store/products/${product.productId}`} variant="success" size={'sm'}>View Product</Button>
             </Container>
         </Card.Body>
     </Card>
