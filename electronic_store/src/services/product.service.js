@@ -43,3 +43,7 @@ export const searchProduct = (query) => {
 export const getProduct = (productId) => {
     return privateAxios.get(`/products/${productId}`).then((res) => res.data);
 };
+
+export const getProductsOfCategories = (categoryId, pageNumber = 0, pageSize = 10, sortBy = 'addedDate', sortDir = 'asc') => {
+    return privateAxios.get(`/categories/${categoryId}/products?pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}&sortDir=${sortDir}`).then((res) => res.data);
+};

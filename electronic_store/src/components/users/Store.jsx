@@ -7,6 +7,7 @@ import {getAllLive, getAllProducts} from '../../services/product.service'
 import SingleProductCard from './SingleProductCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { STORE_PAGE_PRODUCT_SIZE } from '../../services/helper.service'
+import { Link } from 'react-router-dom'
 
 function Store(){
     const [categories, setCategories] = useState(null)
@@ -84,7 +85,7 @@ function Store(){
             </ListGroup.Item>
 
             {categories.content.map(cat => (
-            <ListGroup.Item action key={cat.categoryId}>
+            <ListGroup.Item as={Link} to={`/store/${cat.categoryId}/${cat.title}`} action key={cat.categoryId}>
                 <img src={cat.coverImage} alt={cat.title} className=' rounded-circle'
                      style={{
                         width: "40px",
