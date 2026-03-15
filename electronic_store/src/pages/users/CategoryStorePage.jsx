@@ -1,10 +1,10 @@
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { getProductsOfCategories } from "../../services/product.service"
 import { useEffect, useState } from "react"
 import { STORE_PAGE_PRODUCT_SIZE } from "../../services/helper.service"
 import InfiniteScroll from "react-infinite-scroll-component"
 import SingleProductCard from "../../components/users/SingleProductCard"
-import { Container, Row, Col } from "react-bootstrap"
+import { Container, Row, Col, Breadcrumb } from "react-bootstrap"
 import CategoryView from "../../components/users/CategoryView"
 
 const CategoryStorePage = () => {
@@ -76,6 +76,13 @@ const CategoryStorePage = () => {
     <>
     <Container fluid className="px-5 pt-5">
         <Row>
+            <Container>
+             <Breadcrumb className="mx-5">
+              <Breadcrumb.Item as={Link} to="/store">Store</Breadcrumb.Item>
+              <Breadcrumb.Item>{categoryTitle}</Breadcrumb.Item>
+             </Breadcrumb>
+            </Container>
+
             <Col md={2}>
               <CategoryView/>
             </Col>

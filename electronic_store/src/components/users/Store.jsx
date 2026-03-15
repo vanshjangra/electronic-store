@@ -1,4 +1,4 @@
-import { Col, Container, ListGroup, Row } from 'react-bootstrap'
+import { Breadcrumb, Col, Container, ListGroup, Row } from 'react-bootstrap'
 import { useEffect, useState } from 'react'
 import defaultCategoryImage from '../../assets/default_profile.jpg'
 import { toast } from 'react-toastify'
@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom'
 import CategoryView from './CategoryView'
 
 function Store(){
-    const [categories, setCategories] = useState(null)
     const [products, setProducts] = useState(null)
 
     const [currentPage, setCurrentPage] = useState(0)
@@ -54,42 +53,6 @@ function Store(){
         })
     }
 
-    const categoryView = () => {
-      return categories && (
-        <>
-        <ListGroup variant='flush' className='stick-top'>
-            <ListGroup.Item action>
-                <img src={defaultCategoryImage} alt={'default category image'} className=' rounded-circle'
-                     style={{
-                        width: "40px",
-                        height: "40px",
-                        objectFit: "cover"
-                     }}
-                     onError={event => {
-                        event.currentTarget.setAttribute('src', defaultCategoryImage)
-                     }}/>
-                <span className='ms-2'>All Products</span>
-            </ListGroup.Item>
-
-            {categories.content.map(cat => (
-            <ListGroup.Item as={Link} to={`/store/${cat.categoryId}/${cat.title}`} action key={cat.categoryId}>
-                <img src={cat.coverImage} alt={cat.title} className=' rounded-circle'
-                     style={{
-                        width: "40px",
-                        height: "40px",
-                        objectFit: "cover"
-                     }}
-                     onError={event => {
-                        event.currentTarget.setAttribute('src', defaultCategoryImage)
-                     }}/>
-                <span className='ms-2'>{cat.title}</span>
-            </ListGroup.Item>
-            ))}
-        </ListGroup>
-        </>
-      )
-    }
-
     const productsView = () => {
       return products && (
            <InfiniteScroll dataLength={products.content.length}
@@ -115,6 +78,13 @@ function Store(){
   return (
     <Container fluid className='px-5 pt-5'>
         <Row>
+            <Container>
+             <Breadcrumb className="mx-5">
+              <Breadcrumb.Item as={Link} to="/store">Store</Breadcrumb.Item>
+              <Breadcrumb.Item>All Products</Breadcrumb.Item>
+             </Breadcrumb>
+            </Container>
+
             <Col md={2}>
             {<CategoryView/>}
             </Col>
