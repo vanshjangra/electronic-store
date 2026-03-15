@@ -26,11 +26,13 @@ import AdminUsers from './pages/admin/AdminUsers';
 import StorePage from './pages/users/StorePage';
 import ProductView from './pages/users/ProductView';
 import CategoryStorePage from './pages/users/CategoryStorePage';
+import CartProvider from './context/CartProvider';
 
 function App() {
   return (
 
   <UserProvider>
+    <CartProvider>
     <BrowserRouter>
       <ToastContainer position='bottom-center' theme='dark' draggable/>
       <CustomNavbar/>
@@ -64,6 +66,7 @@ function App() {
       </Route>
     </Routes>
     </BrowserRouter>
+    </CartProvider>
   </UserProvider>
   );
 }
