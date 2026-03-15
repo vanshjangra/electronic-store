@@ -1,5 +1,4 @@
 import { Col, Container, ListGroup, Row } from 'react-bootstrap'
-import { getCategories } from '../../services/CategoryService'
 import { useEffect, useState } from 'react'
 import defaultCategoryImage from '../../assets/default_profile.jpg'
 import { toast } from 'react-toastify'
@@ -8,6 +7,7 @@ import SingleProductCard from './SingleProductCard'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { STORE_PAGE_PRODUCT_SIZE } from '../../services/helper.service'
 import { Link } from 'react-router-dom'
+import CategoryView from './CategoryView'
 
 function Store(){
     const [categories, setCategories] = useState(null)
@@ -16,7 +16,6 @@ function Store(){
     const [currentPage, setCurrentPage] = useState(0)
 
     useEffect(() => {
-        loadCategories(0, 100000)
         loadProducts(currentPage, STORE_PAGE_PRODUCT_SIZE, 'addedDate', 'desc')
     }, [])
 
@@ -30,22 +29,10 @@ function Store(){
         setCurrentPage(currentPage + 1)
     }
 
-    const loadCategories = (pageNumber, pageSize) => {
-        getCategories(pageNumber, pageSize)
-        .then(data => {
-            console.log(data)
-            setCategories({...data})
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    }
-
     const loadProducts = (pageNumber, pageSize, sortBy, sortDir) => {
         getAllLive(pageNumber, pageSize, sortBy, sortDir)
         .then(data => {
             console.log(data)
-            setProducts({...data})
 
             if(currentPage > 0){
                 setProducts({
@@ -129,7 +116,7 @@ function Store(){
     <Container fluid className='px-5 pt-5'>
         <Row>
             <Col md={2}>
-            {categoryView()}
+            {<CategoryView/>}
             </Col>
 
             <Col md={10}>
